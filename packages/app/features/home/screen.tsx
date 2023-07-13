@@ -1,15 +1,18 @@
 import {
-  Anchor,
   Button,
-  H1,
+  Card,
+  H2,
+  Image,
   Paragraph,
-  Separator,
   Sheet,
-  useToastController,
+  SizableText,
+  Tabs,
+  View,
   XStack,
   YStack,
+  useToastController,
 } from '@my/ui'
-import { ChevronDown, ChevronUp } from '@tamagui/lucide-icons'
+import { ChevronDown, ChevronUp, Gamepad2, History, Settings, Wallet } from '@tamagui/lucide-icons'
 import React, { useState } from 'react'
 import { useLink } from 'solito/link'
 
@@ -19,37 +22,95 @@ export function HomeScreen() {
   })
 
   return (
-    <YStack f={1} jc="center" ai="center" p="$4" space>
-      <YStack space="$4" maw={600}>
-        <H1 ta="center">Welcome to Tamagui.</H1>
-        <Paragraph ta="center">
-          Here's a basic starter to show navigating from one screen to another. This screen uses the
-          same code on Next.js and React Native.
-        </Paragraph>
-
-        <Separator />
-        <Paragraph ta="center">
-          Made by{' '}
-          <Anchor color="$color12" href="https://twitter.com/natebirdman" target="_blank">
-            @natebirdman
-          </Anchor>
-          ,{' '}
-          <Anchor
-            color="$color12"
-            href="https://github.com/tamagui/tamagui"
-            target="_blank"
-            rel="noreferrer"
-          >
-            give it a ⭐️
-          </Anchor>
-        </Paragraph>
-      </YStack>
-
-      <XStack>
-        <Button {...linkProps}>Link to user</Button>
-      </XStack>
-
-      <SheetDemo />
+    <YStack f={1}>
+      <Tabs
+        defaultValue="tab1"
+        orientation="horizontal"
+        flexDirection="column"
+        overflow="hidden"
+        borderColor="$borderColor"
+      >
+        <Tabs.Content value="tab1">
+          <View padding="$4">
+            <Card
+              elevate
+              bordered
+              animation={'bouncy'}
+              hoverStyle={{ scale: 0.925 }}
+              pressStyle={{ scale: 0.875 }}
+            >
+              <Card.Header padded>
+                <H2>MAIN-NET</H2>
+                <Paragraph>NDKPZZKCKHSXOZ7Q6B6JICUOSBNV5GTZIOBCO3I</Paragraph>
+              </Card.Header>
+              <Card.Footer>
+                <Card.Footer padded>
+                  <XStack flex={1} />
+                  <Button borderRadius="$10">Purchase</Button>
+                </Card.Footer>
+              </Card.Footer>
+              <Card.Background>
+                <Image
+                  source={{
+                    uri: 'https://github.com/ymuichiro/symbol_japan_forum/blob/main/logo/cc_0/Symbol_Logo_one_color_dark_BG-01.png?raw=true',
+                  }}
+                  width={'100%'}
+                  height={'100%'}
+                  opacity={0.1}
+                />
+              </Card.Background>
+            </Card>
+          </View>
+        </Tabs.Content>
+        <Tabs.Content value="tab2">sam</Tabs.Content>
+        <Tabs.Content value="tab3">ham</Tabs.Content>
+        <Tabs.Content value="tab4">sem</Tabs.Content>
+        <Tabs.List
+          f={1}
+          disablePassBorderRadius="bottom"
+          borderTopWidth="$-0.25"
+          borderTopColor="$borderColor"
+          style={{
+            width: '100%',
+            position: 'fixed',
+            bottom: 0,
+            left: 0,
+          }}
+        >
+          <Tabs.Tab value="tab1" f={1} height={'$5'}>
+            <YStack ai={'center'}>
+              <Wallet />
+              <SizableText theme="alt1" size="$1">
+                wallet
+              </SizableText>
+            </YStack>
+          </Tabs.Tab>
+          <Tabs.Tab value="tab2" f={1} height={'$5'}>
+            <YStack ai={'center'}>
+              <History />
+              <SizableText theme="alt1" size="$1">
+                history
+              </SizableText>
+            </YStack>
+          </Tabs.Tab>
+          <Tabs.Tab value="tab3" f={1} height={'$5'}>
+            <YStack ai={'center'}>
+              <Gamepad2 />
+              <SizableText theme="alt1" size="$1">
+                games
+              </SizableText>
+            </YStack>
+          </Tabs.Tab>
+          <Tabs.Tab value="tab4" f={1} height={'$5'}>
+            <YStack ai={'center'}>
+              <Settings />
+              <SizableText theme="alt1" size="$1">
+                Setting
+              </SizableText>
+            </YStack>
+          </Tabs.Tab>
+        </Tabs.List>
+      </Tabs>
     </YStack>
   )
 }
