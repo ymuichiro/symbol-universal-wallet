@@ -1,0 +1,12 @@
+{
+  "name": "symbol",
+  "packageManager": "yarn@3.5.0",
+  "main": "./dist/index.js",
+  "private": true,
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "symbol-sdk": "^3.0.7"
+  }
+}
