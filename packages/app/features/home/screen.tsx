@@ -1,74 +1,69 @@
 import {
-  Button,
-  Card,
-  H2,
+  BalanceCurrencyCard,
+  BalanceMosaicsCard,
+  FavoriteActions,
   Image,
-  Paragraph,
-  Sheet,
+  ListItem,
+  ScrollView,
+  Separator,
   SizableText,
   Tabs,
-  View,
-  XStack,
+  YGroup,
   YStack,
-  useToastController,
-} from '@my/ui'
-import { ChevronDown, ChevronUp, Gamepad2, History, Settings, Wallet } from '@tamagui/lucide-icons'
-import React, { useState } from 'react'
-import { useLink } from 'solito/link'
+} from '@my/ui';
+import { ChevronRight, Gamepad2, History, Settings, Wallet } from '@tamagui/lucide-icons';
+import LogoIsekaitensei from 'app/assets/icons/logo-isekaitensei.jpg';
+import LogoSymbolLine from 'app/assets/icons/logo-symbol-line.png';
+import LogoTheTower from 'app/assets/icons/logo-the-tower.png';
+import React, { useEffect, useState } from 'react';
+import { Dimensions } from 'react-native';
+import { useLink } from 'solito/link';
+
+const ADDRESS = 'NDKPZZKCKHSXOZ7Q6B6JICUOSBNV5GTZIOBCO3I';
 
 export function HomeScreen() {
   const linkProps = useLink({
     href: '/user/nate',
-  })
+  });
+
+  const [height, setHeight] = useState<number>(Dimensions.get('window').height);
+
+  useEffect(() => {
+    const _event = Dimensions.addEventListener('change', (e) => {
+      setHeight(e.window.height);
+    });
+    return () => {
+      _event.remove();
+    };
+  }, []);
 
   return (
     <YStack f={1}>
       <Tabs
-        defaultValue="tab1"
+        defaultValue="wallet"
         orientation="horizontal"
         flexDirection="column"
         overflow="hidden"
         borderColor="$borderColor"
       >
-        <Tabs.Content value="tab1">
-          <View padding="$4">
-            <Card
-              elevate
-              bordered
-              animation={'bouncy'}
-              hoverStyle={{ scale: 0.925 }}
-              pressStyle={{ scale: 0.875 }}
-            >
-              <Card.Header padded>
-                <H2>MAIN-NET</H2>
-                <Paragraph>NDKPZZKCKHSXOZ7Q6B6JICUOSBNV5GTZIOBCO3I</Paragraph>
-              </Card.Header>
-              <Card.Footer>
-                <Card.Footer padded>
-                  <XStack flex={1} />
-                  <Button borderRadius="$10">Purchase</Button>
-                </Card.Footer>
-              </Card.Footer>
-              <Card.Background>
-                <Image
-                  source={{
-                    uri: 'https://github.com/ymuichiro/symbol_japan_forum/blob/main/logo/cc_0/Symbol_Logo_one_color_dark_BG-01.png?raw=true',
-                  }}
-                  width={'100%'}
-                  height={'100%'}
-                  opacity={0.1}
-                />
-              </Card.Background>
-            </Card>
-          </View>
+        <Tabs.Content value="wallet">
+          <ScrollView style={{ height: height, paddingBottom: 100 }}>
+            <WalletTab />
+          </ScrollView>
         </Tabs.Content>
-        <Tabs.Content value="tab2">sam</Tabs.Content>
-        <Tabs.Content value="tab3">ham</Tabs.Content>
-        <Tabs.Content value="tab4">sem</Tabs.Content>
+        <Tabs.Content value="history">
+          <ScrollView style={{ height: height, paddingBottom: 100 }}>
+            <HistoryTab />
+          </ScrollView>
+        </Tabs.Content>
+        <Tabs.Content value="games">
+          <GamesTab />
+        </Tabs.Content>
+        <Tabs.Content value="settings">sem</Tabs.Content>
         <Tabs.List
           f={1}
           disablePassBorderRadius="bottom"
-          borderTopWidth="$-0.25"
+          borderTopWidth="$0.5"
           borderTopColor="$borderColor"
           style={{
             width: '100%',
@@ -77,7 +72,7 @@ export function HomeScreen() {
             left: 0,
           }}
         >
-          <Tabs.Tab value="tab1" f={1} height={'$5'}>
+          <Tabs.Tab value="wallet" f={1} height={'$5'}>
             <YStack ai={'center'}>
               <Wallet />
               <SizableText theme="alt1" size="$1">
@@ -85,7 +80,7 @@ export function HomeScreen() {
               </SizableText>
             </YStack>
           </Tabs.Tab>
-          <Tabs.Tab value="tab2" f={1} height={'$5'}>
+          <Tabs.Tab value="history" f={1} height={'$5'}>
             <YStack ai={'center'}>
               <History />
               <SizableText theme="alt1" size="$1">
@@ -93,7 +88,7 @@ export function HomeScreen() {
               </SizableText>
             </YStack>
           </Tabs.Tab>
-          <Tabs.Tab value="tab3" f={1} height={'$5'}>
+          <Tabs.Tab value="games" f={1} height={'$5'}>
             <YStack ai={'center'}>
               <Gamepad2 />
               <SizableText theme="alt1" size="$1">
@@ -101,7 +96,7 @@ export function HomeScreen() {
               </SizableText>
             </YStack>
           </Tabs.Tab>
-          <Tabs.Tab value="tab4" f={1} height={'$5'}>
+          <Tabs.Tab value="settings" f={1} height={'$5'}>
             <YStack ai={'center'}>
               <Settings />
               <SizableText theme="alt1" size="$1">
@@ -112,47 +107,122 @@ export function HomeScreen() {
         </Tabs.List>
       </Tabs>
     </YStack>
-  )
+  );
 }
 
-function SheetDemo() {
-  const [open, setOpen] = useState(false)
-  const [position, setPosition] = useState(0)
-  const toast = useToastController()
-
+function WalletTab(): JSX.Element {
   return (
-    <>
-      <Button
-        size="$6"
-        icon={open ? ChevronDown : ChevronUp}
-        circular
-        onPress={() => setOpen((x) => !x)}
+    <YStack padding="$4" space={'$8'}>
+      <BalanceCurrencyCard networkType={152} address={ADDRESS} background={LogoSymbolLine.src} />
+      <FavoriteActions />
+      <BalanceMosaicsCard
+        networkType={152}
+        address={ADDRESS}
+        mosaics={new Array(30).fill(null).map(() => ({ id: 'symbol.xym', amount: 1000000 }))}
       />
-      <Sheet
-        modal
-        open={open}
-        onOpenChange={setOpen}
-        snapPoints={[80]}
-        position={position}
-        onPositionChange={setPosition}
-        dismissOnSnapToBottom
-      >
-        <Sheet.Overlay />
-        <Sheet.Frame ai="center" jc="center">
-          <Sheet.Handle />
-          <Button
-            size="$6"
-            circular
-            icon={ChevronDown}
-            onPress={() => {
-              setOpen(false)
-              toast.show('Sheet closed!', {
-                message: 'Just showing how toast works...',
-              })
-            }}
+    </YStack>
+  );
+}
+
+function HistoryTab(): JSX.Element {
+  return (
+    <Tabs
+      defaultValue="all"
+      flexDirection="column"
+      orientation="horizontal"
+      borderWidth="$0.25"
+      overflow="hidden"
+      borderColor="$borderColor"
+    >
+      <Tabs.List separator={<Separator vertical />} disablePassBorderRadius="bottom">
+        <Tabs.Tab f={1} value="all">
+          <SizableText>All</SizableText>
+        </Tabs.Tab>
+        <Tabs.Tab f={1} value="unsigned">
+          <SizableText>UnSigned</SizableText>
+        </Tabs.Tab>
+        <Tabs.Tab f={1} value="unconfirmed">
+          <SizableText>UnConfirmed</SizableText>
+        </Tabs.Tab>
+      </Tabs.List>
+      <Tabs.Content f={1} value="all">
+        <YStack f={1} ai="center" jc="center">
+          {new Array(30).fill(null).map((_, i) => {
+            return (
+              <ListItem
+                key={i}
+                hoverTheme
+                pressTheme
+                title="トランザクション"
+                subTitle="Subtitle"
+                icon={History}
+                iconAfter={ChevronRight}
+              />
+            );
+          })}
+        </YStack>
+      </Tabs.Content>
+      <Tabs.Content value="unsigned">
+        <YStack f={1} ai="center" jc="center">
+          {new Array(30).fill(null).map((_, i) => {
+            return (
+              <ListItem
+                key={i}
+                hoverTheme
+                pressTheme
+                title="未署名トランザクション"
+                subTitle="Subtitle"
+                icon={History}
+                iconAfter={ChevronRight}
+              />
+            );
+          })}
+        </YStack>
+      </Tabs.Content>
+      <Tabs.Content value="unconfirmed">
+        <YStack f={1} ai="center" jc="center">
+          {new Array(30).fill(null).map((_, i) => {
+            return (
+              <ListItem
+                key={i}
+                hoverTheme
+                pressTheme
+                title="未承認トランザクション"
+                subTitle="Subtitle"
+                icon={History}
+                iconAfter={ChevronRight}
+              />
+            );
+          })}
+        </YStack>
+      </Tabs.Content>
+    </Tabs>
+  );
+}
+
+function GamesTab(): JSX.Element {
+  return (
+    <YStack padding="$4" space={'$8'}>
+      <YGroup alignSelf="center" bordered size="$5" separator={<Separator />}>
+        <YGroup.Item>
+          <ListItem
+            hoverTheme
+            pressTheme
+            title={'The Tower'}
+            subTitle={"Why climb? Because that's where the tower is."}
+            icon={<Image source={{ uri: LogoTheTower.src, height: 100, width: 100 }} />}
           />
-        </Sheet.Frame>
-      </Sheet>
-    </>
-  )
+        </YGroup.Item>
+        <YGroup.Item>
+          <ListItem
+            hoverTheme
+            pressTheme
+            title={'異世界転生したら法定通貨がXYMだった件'}
+            subTitle={'All-player cooperative online RPG'}
+            icon={<Image source={{ uri: LogoIsekaitensei.src, height: 100, width: 100 }} />}
+          />
+        </YGroup.Item>
+      </YGroup>
+    </YStack>
+  );
 }
