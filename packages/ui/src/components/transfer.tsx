@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { requestSign, setTransactionByPayload } from 'sss-module';
-import { announce, transfer } from 'symbol/src/api.js';
+import { announce, transfer } from 'symbol';
+import { utf8ToHex } from 'symbol/src/utils/converter.js';
+import { isMobileDevice } from 'symbol/src/utils/isMobileDevice.js';
 import { Button, Input, XStack } from 'tamagui';
-import { utf8ToHex } from '../utils/converter.js';
-import { isMobileDevice } from '../utils/isMobileDevice';
 
 export function TransferForm({
   signerPublicKey,
@@ -41,7 +41,9 @@ export function TransferForm({
   }
 
   async function callAlice(payload: string) {
-    window.location.href = `alice://sign?type=request_sign_transaction&data=${payload}&callback=${utf8ToHex(callback)}`;
+    window.location.href = `alice://sign?type=request_sign_transaction&data=${payload}&callback=${utf8ToHex(
+      callback!
+    )}`;
   }
 
   return (
