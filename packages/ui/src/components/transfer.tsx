@@ -1,15 +1,19 @@
 import { useState } from 'react';
 import { requestSign, setTransactionByPayload } from 'sss-module';
-import { announce, transfer } from 'symbol';
-import { utf8ToHex } from 'symbol/src/utils/converter.js';
-import { isMobileDevice } from 'symbol/src/utils/isMobileDevice.js';
+import TransactionService from 'symbol/src/services/restApiClient/TransactionService';
+import { utf8ToHex } from 'symbol/src/utils/converter';
+import { isMobileDevice } from 'symbol/src/utils/isMobileDevice';
 import { Button, Input, XStack } from 'tamagui';
+import transfer from 'symbol/src/services/transactions/transfer';
+import { NetworkType } from 'symbol/src/models/NetworkType';
+import Mosaic from 'symbol/src/models/Mosaic';
+import ITransferTransaction from 'symbol/src/models/transactions/ITransferTransaction';
 
 export function TransferForm({
   signerPublicKey,
   callback,
 }: {
-  signerPublicKey: string | undefined;
+  signerPublicKey?: string;
   callback?: string;
 }) {
   const [address, setAddress] = useState('');
@@ -34,7 +38,7 @@ export function TransferForm({
     if (!isMobileDevice()) {
       setTransactionByPayload(payload);
       const signed = await requestSign();
-      const result = await announce(signed.payload);
+      const result = await new TransactionService().announce(signed.payload);
     } else {
       callAlice(payload);
     }
@@ -66,7 +70,19 @@ export function TransferForm({
       </XStack>
       <Button
         onPress={async () => {
-          const payload = await transfer({ signerPublicKey, mosaicId, amount, address, message });
+          const mosaics: Mosaic[] = [{
+            id: mosaicId,
+            amount: BigInt(amount)
+        }];
+
+        const transferTransaction: ITransferTransaction = {
+            networkType: NetworkType.TESTNET,
+            signerPublicKey,
+            mosaics,
+            recipientAddress: address,
+            message: message
+        }
+          const payload = await transfer(transferTransaction);
           await getSignedPayload(payload);
         }}
       >

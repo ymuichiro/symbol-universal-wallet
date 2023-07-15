@@ -4,8 +4,13 @@ import React, { useEffect, useState } from 'react';
 import { createParam } from 'solito';
 import { useLink } from 'solito/link';
 import { Button, Paragraph, Text, XStack } from 'tamagui';
-import { announce, getAccountInfo } from '../../../symbol/src/api';
-import { Account } from '../../../symbol/src/models/Account';
+import { initSymbolApi, node } from 'symbol/src/services/restApiClient';
+import TransactionService from 'symbol/src/services/restApiClient/TransactionService';
+import { TransactionGroup } from 'symbol/src/models/restApi/transactions/SearchCriteria';
+import { TransactionType } from 'symbol/src/models/transactions/TransactionType';
+
+import AccountService from 'symbol/src/services/restApiClient/AccountService';
+import { Account } from 'symbol/src/models/Account';
 
 const { useParam } = createParam<{ id: string; signed_payload: string }>();
 
@@ -20,6 +25,10 @@ function ListMosaic({ moasicId, amount }: { moasicId: string; amount: BigInt }) 
 }
 
 export function UserDetailScreen() {
+  if(node === undefined){
+    initSymbolApi("https://mikun-testnet.tk:3001");
+    console.log("init node");
+  }
   const [account, setAccount] = useState<Account | null>(null);
   const [currentUrl, setCurrentUrl] = useState('');
 
@@ -32,18 +41,20 @@ export function UserDetailScreen() {
     if (id === undefined) return;
     console.log(id);
     const _ = async () => {
-      const data = await getAccountInfo(id);
+      const data = await new AccountService().getAccountInfo(id);
       setAccount(data);
     };
     _();
     setCurrentUrl(window.location.href);
+    new TransactionService().searchTransactions(TransactionGroup.Confirmed, {address: id, type: TransactionType.TransferTransaction}).then((result) => {
+    });
   }, [id]);
 
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
     const signed_payload = queryParams.get('signed_payload');
     if (signed_payload === null) return;
-    announce(signed_payload).then((result) => {
+    new TransactionService().announce(signed_payload).then((result) => {
       alert('送信しました');
     });
   }, []);
