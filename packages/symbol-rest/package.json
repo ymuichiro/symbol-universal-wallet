@@ -13,6 +13,6 @@
     "@openapitools/openapi-generator-cli": "^2.5.2"
   },
   "scripts": {
-    "build": "rimraf dist && openapi-generator-cli generate && tsc --build tsconfig.json"
+    "_build": "rimraf dist && openapi-generator-cli generate && tsc --build tsconfig.json"
   }
 }
