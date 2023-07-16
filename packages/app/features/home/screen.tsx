@@ -1,20 +1,7 @@
-import {
-  BalanceCurrencyCard,
-  BalanceMosaicsCard,
-  FavoriteActions,
-  Image,
-  ListItem,
-  ScrollView,
-  Separator,
-  SizableText,
-  Tabs,
-  YGroup,
-  YStack,
-} from '@my/ui';
-import { ChevronRight, Gamepad2, History, Settings, Wallet } from '@tamagui/lucide-icons';
-import LogoIsekaitensei from 'app/assets/icons/logo-isekaitensei.jpg';
+import { GamesTab, HistoryTab, ScrollView, SettingsTab, SizableText, Tabs, WalletTab, YStack } from '@my/ui';
+import { Gamepad2, History, Settings, Wallet } from '@tamagui/lucide-icons';
 import LogoSymbolLine from 'app/assets/icons/logo-symbol-line.png';
-import LogoTheTower from 'app/assets/icons/logo-the-tower.png';
+import { GAMES_INFO } from 'app/assets/jsons/games';
 import React, { useEffect, useState } from 'react';
 import { Dimensions } from 'react-native';
 import { useLink } from 'solito/link';
@@ -40,26 +27,39 @@ export function HomeScreen() {
   return (
     <YStack f={1}>
       <Tabs
-        defaultValue="wallet"
+        defaultValue="settings"
         orientation="horizontal"
         flexDirection="column"
         overflow="hidden"
         borderColor="$borderColor"
       >
+        {/* -- content -- */}
         <Tabs.Content value="wallet">
           <ScrollView style={{ height: height, paddingBottom: 100 }}>
-            <WalletTab />
+            <WalletTab
+              address={ADDRESS}
+              background={LogoSymbolLine.src}
+              networkType={152}
+              mosaics={new Array(30).fill(null).map(() => ({ id: 'symbol.xym', amount: 1000000 }))}
+            />
           </ScrollView>
         </Tabs.Content>
         <Tabs.Content value="history">
           <ScrollView style={{ height: height, paddingBottom: 100 }}>
-            <HistoryTab />
+            <HistoryTab address={ADDRESS} networkType={152} />
           </ScrollView>
         </Tabs.Content>
         <Tabs.Content value="games">
-          <GamesTab />
+          <ScrollView style={{ height: height, paddingBottom: 100 }}>
+            <GamesTab items={GAMES_INFO} />
+          </ScrollView>
         </Tabs.Content>
-        <Tabs.Content value="settings">sem</Tabs.Content>
+        <Tabs.Content value="settings">
+          <ScrollView style={{ height: height, paddingBottom: 100 }}>
+            <SettingsTab address={ADDRESS} networkType={152} />
+          </ScrollView>
+        </Tabs.Content>
+        {/* -- list -- */}
         <Tabs.List
           f={1}
           disablePassBorderRadius="bottom"
@@ -106,123 +106,6 @@ export function HomeScreen() {
           </Tabs.Tab>
         </Tabs.List>
       </Tabs>
-    </YStack>
-  );
-}
-
-function WalletTab(): JSX.Element {
-  return (
-    <YStack padding="$4" space={'$8'}>
-      <BalanceCurrencyCard networkType={152} address={ADDRESS} background={LogoSymbolLine.src} />
-      <FavoriteActions />
-      <BalanceMosaicsCard
-        networkType={152}
-        address={ADDRESS}
-        mosaics={new Array(30).fill(null).map(() => ({ id: 'symbol.xym', amount: 1000000 }))}
-      />
-    </YStack>
-  );
-}
-
-function HistoryTab(): JSX.Element {
-  return (
-    <Tabs
-      defaultValue="all"
-      flexDirection="column"
-      orientation="horizontal"
-      borderWidth="$0.25"
-      overflow="hidden"
-      borderColor="$borderColor"
-    >
-      <Tabs.List separator={<Separator vertical />} disablePassBorderRadius="bottom">
-        <Tabs.Tab f={1} value="all">
-          <SizableText>All</SizableText>
-        </Tabs.Tab>
-        <Tabs.Tab f={1} value="unsigned">
-          <SizableText>UnSigned</SizableText>
-        </Tabs.Tab>
-        <Tabs.Tab f={1} value="unconfirmed">
-          <SizableText>UnConfirmed</SizableText>
-        </Tabs.Tab>
-      </Tabs.List>
-      <Tabs.Content f={1} value="all">
-        <YStack f={1} ai="center" jc="center">
-          {new Array(30).fill(null).map((_, i) => {
-            return (
-              <ListItem
-                key={i}
-                hoverTheme
-                pressTheme
-                title="トランザクション"
-                subTitle="Subtitle"
-                icon={History}
-                iconAfter={ChevronRight}
-              />
-            );
-          })}
-        </YStack>
-      </Tabs.Content>
-      <Tabs.Content value="unsigned">
-        <YStack f={1} ai="center" jc="center">
-          {new Array(30).fill(null).map((_, i) => {
-            return (
-              <ListItem
-                key={i}
-                hoverTheme
-                pressTheme
-                title="未署名トランザクション"
-                subTitle="Subtitle"
-                icon={History}
-                iconAfter={ChevronRight}
-              />
-            );
-          })}
-        </YStack>
-      </Tabs.Content>
-      <Tabs.Content value="unconfirmed">
-        <YStack f={1} ai="center" jc="center">
-          {new Array(30).fill(null).map((_, i) => {
-            return (
-              <ListItem
-                key={i}
-                hoverTheme
-                pressTheme
-                title="未承認トランザクション"
-                subTitle="Subtitle"
-                icon={History}
-                iconAfter={ChevronRight}
-              />
-            );
-          })}
-        </YStack>
-      </Tabs.Content>
-    </Tabs>
-  );
-}
-
-function GamesTab(): JSX.Element {
-  return (
-    <YStack padding="$4" space={'$8'}>
-      <YGroup alignSelf="center" bordered size="$5" separator={<Separator />}>
-        <YGroup.Item>
-          <ListItem
-            hoverTheme
-            pressTheme
-            title={'The Tower'}
-            subTitle={"Why climb? Because that's where the tower is."}
-            icon={<Image source={{ uri: LogoTheTower.src, height: 100, width: 100 }} />}
-          />
-        </YGroup.Item>
-        <YGroup.Item>
-          <ListItem
-            hoverTheme
-            pressTheme
-            title={'異世界転生したら法定通貨がXYMだった件'}
-            subTitle={'All-player cooperative online RPG'}
-            icon={<Image source={{ uri: LogoIsekaitensei.src, height: 100, width: 100 }} />}
-          />
-        </YGroup.Item>
-      </YGroup>
     </YStack>
   );
 }

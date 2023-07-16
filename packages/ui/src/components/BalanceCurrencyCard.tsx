@@ -1,8 +1,7 @@
 import { Button } from '@tamagui/button';
 import { Card } from '@tamagui/card';
 import { Image } from '@tamagui/image';
-import { XStack } from '@tamagui/stacks';
-import { H2, SizableText } from '@tamagui/text';
+import { H2, H4, SizableText } from '@tamagui/text';
 
 interface Props {
   networkType: 152 | 104;
@@ -19,10 +18,10 @@ export function BalanceCurrencyCard(props: Props): JSX.Element {
       <Card.Header padded>
         <H2>{props.networkType === 104 ? 'MAIN-NET' : 'TEST-NET'}</H2>
         <SizableText>{props.address}</SizableText>
+        <H4>{`${(1000000000).toLocaleString()} XYM`}</H4>
       </Card.Header>
       <Card.Footer>
         <Card.Footer padded>
-          <XStack flex={1} />
           <Button borderRadius="$10">Payment</Button>
         </Card.Footer>
       </Card.Footer>
