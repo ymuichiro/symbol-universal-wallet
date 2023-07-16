@@ -1,15 +1,17 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { requestSign, setTransactionByPayload } from 'sss-module';
-import { announce, transfer } from 'symbol';
-import { utf8ToHex } from 'symbol/src/utils/converter.js';
-import { isMobileDevice } from 'symbol/src/utils/isMobileDevice.js';
+import SymbolApiService from 'symbol/src/services/SymbolApiService';
+import { utf8ToHex } from 'symbol/src/utils/converter';
+import { isMobileDevice } from 'symbol/src/utils/isMobileDevice';
 import { Button, Input, XStack } from 'tamagui';
+import TransactionBuilderService from 'symbol/src/services/TransactionBuilderService';
+import { NetworkType } from 'symbol/src/models/NetworkType';
+import Mosaic from 'symbol/src/models/Mosaic';
+import ITransferTransaction from 'symbol/src/models/interfaces/ITransferTransaction';
 
 export function TransferForm({
-  signerPublicKey,
   callback,
 }: {
-  signerPublicKey: string | undefined;
   callback?: string;
 }) {
   const [address, setAddress] = useState('');
@@ -29,18 +31,28 @@ export function TransferForm({
   const handleAmountChange = (event: any) => {
     setAmount(event.target.value);
   };
+  
+  useEffect(() => {
+    setAddress("TAUYF774MZWLBEUI7S2LR6BA5CYLL53QSMDVV3Y");
+    setMessage("test");
+    setMosaicId("72C0212E67A08BCE");
+    setAmount("1");
+  }, []);
 
   async function getSignedPayload(payload: string) {
     if (!isMobileDevice()) {
       setTransactionByPayload(payload);
       const signed = await requestSign();
-      const result = await announce(signed.payload);
+      const symbolApiService = new SymbolApiService("https://mikun-testnet.tk:3001");
+      const transactionSerice = symbolApiService.createTransactionService();
+      const result = await transactionSerice.announce(signed.payload);
     } else {
       callAlice(payload);
     }
   }
 
   async function callAlice(payload: string) {
+    console.log(utf8ToHex(callback!));
     window.location.href = `alice://sign?type=request_sign_transaction&data=${payload}&callback=${utf8ToHex(
       callback!
     )}`;
@@ -66,7 +78,18 @@ export function TransferForm({
       </XStack>
       <Button
         onPress={async () => {
-          const payload = await transfer({ signerPublicKey, mosaicId, amount, address, message });
+          const mosaics: Mosaic[] = [{
+            id: mosaicId,
+            amount: BigInt(amount)
+        }];
+
+        const transferTransaction: ITransferTransaction = {
+            networkType: NetworkType.TESTNET,
+            mosaics,
+            recipientAddress: address,
+            message: message
+        }
+          const payload = await TransactionBuilderService.buildTransferTransaction(transferTransaction);
           await getSignedPayload(payload);
         }}
       >

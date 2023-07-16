@@ -1,4 +1,4 @@
-import { Mosaic } from './Mosaic';
+import Mosaic from './Mosaic';
 
 export interface Account {
   address: string;
