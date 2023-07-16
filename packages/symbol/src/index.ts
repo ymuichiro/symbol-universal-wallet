@@ -1,5 +1,5 @@
 import { Account } from './models/Account';
-import { Mosaic } from './models/Mosaic';
+import Mosaic from './models/Mosaic';
 import base32 from './utils/base32';
 import { hexToUint8 } from './utils/converter';
 
