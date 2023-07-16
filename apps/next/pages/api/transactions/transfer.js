@@ -16,7 +16,7 @@ export default async function create(req/*: NextApiRequest*/, res/*: NextApiResp
 }
 async function getHandle(req/*: NextApiRequest*/, res/*: NextApiResponse*/) {
     try{
-        let { recipientAddress, signerPublicKey, 'mosaics[id]': mosaicIds, 'mosaics[amount]': mosaicAmounts, feeMultiplier, message, networkType, deadline } = req.query;
+        let { recipientAddress, 'mosaics[id]': mosaicIds, 'mosaics[amount]': mosaicAmounts, feeMultiplier, message, networkType, deadline } = req.query;
         if(feeMultiplier == undefined) feeMultiplier = 100;
         const facade = new symbolSdk.facade.SymbolFacade(networkType == 0 ? "mainnet" : "testnet");
         deadline = deadline == undefined ? new symbolSdk.symbol.NetworkTimestamp(facade.network.fromDatetime(Date.now())).addHours(2).timestamp
@@ -43,7 +43,6 @@ async function getHandle(req/*: NextApiRequest*/, res/*: NextApiResponse*/) {
         }
         const transaction = facade.transactionFactory.create({
             type: 'transfer_transaction_v1',
-            signerPublicKey,
             deadline,
             message: messageArray,
             recipientAddress,

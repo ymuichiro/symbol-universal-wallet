@@ -4,15 +4,15 @@ import React, { useEffect, useState } from 'react';
 import { createParam } from 'solito';
 import { useLink } from 'solito/link';
 import { Button, Paragraph, Text, XStack } from 'tamagui';
-import { initSymbolApi, node } from 'symbol/src/services/restApiClient';
-import TransactionService from 'symbol/src/services/restApiClient/TransactionService';
-import { TransactionGroup } from 'symbol/src/models/restApi/transactions/SearchCriteria';
-import { TransactionType } from 'symbol/src/models/transactions/TransactionType';
-
-import AccountService from 'symbol/src/services/restApiClient/AccountService';
+import SymbolApiService from 'symbol/src/services/SymbolApiService';
+import { TransactionGroup } from 'symbol/src/models/SearchCriteria';
+import { TransactionType } from 'symbol/src/models/TransactionType';
 import { Account } from 'symbol/src/models/Account';
 
 const { useParam } = createParam<{ id: string; signed_payload: string }>();
+const symbolApiService = new SymbolApiService("https://mikun-testnet.tk:3001");
+const accountService = symbolApiService.createAccountService();
+const transactionSerice = symbolApiService.createTransactionService();
 
 function ListMosaic({ moasicId, amount }: { moasicId: string; amount: BigInt }) {
   return (
@@ -25,10 +25,6 @@ function ListMosaic({ moasicId, amount }: { moasicId: string; amount: BigInt }) 
 }
 
 export function UserDetailScreen() {
-  if(node === undefined){
-    initSymbolApi("https://mikun-testnet.tk:3001");
-    console.log("init node");
-  }
   const [account, setAccount] = useState<Account | null>(null);
   const [currentUrl, setCurrentUrl] = useState('');
 
@@ -41,12 +37,14 @@ export function UserDetailScreen() {
     if (id === undefined) return;
     console.log(id);
     const _ = async () => {
-      const data = await new AccountService().getAccountInfo(id);
+      const data = await accountService.getAccountInfo(id);
       setAccount(data);
     };
     _();
     setCurrentUrl(window.location.href);
-    new TransactionService().searchTransactions(TransactionGroup.Confirmed, {address: id, type: TransactionType.TransferTransaction}).then((result) => {
+    transactionSerice.getTransactionInfo(TransactionGroup.Confirmed, "1B5DA615114774D75105258D8CFE50EB58B48519A40BA4A377679471ABECC993").then((result) => console.log(result));
+    transactionSerice.searchTransactions(TransactionGroup.Confirmed, {address: id, type: TransactionType.TransferTransaction}).then((result) => {
+      console.log(result);
     });
   }, [id]);
 
@@ -54,7 +52,7 @@ export function UserDetailScreen() {
     const queryParams = new URLSearchParams(window.location.search);
     const signed_payload = queryParams.get('signed_payload');
     if (signed_payload === null) return;
-    new TransactionService().announce(signed_payload).then((result) => {
+    transactionSerice.announce(signed_payload).then((result) => {
       alert('送信しました');
     });
   }, []);
@@ -75,7 +73,7 @@ export function UserDetailScreen() {
           <ListMosaic key={index} moasicId={mosaic.id} amount={mosaic.amount} /* その他のプロパティ */ />
         ))}
       </div>
-      <TransferForm signerPublicKey={account?.publicKey} callback={currentUrl} />
+      <TransferForm callback={currentUrl} />
       <Button {...link} icon={ChevronLeft}>
         Go Home
       </Button>

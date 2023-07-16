@@ -1,4 +1,4 @@
-import { TransactionType } from '../../transactions/TransactionType';
+import { TransactionType } from './TransactionType';
 
 export enum TransactionGroup {
     Confirmed = 'confirmed',

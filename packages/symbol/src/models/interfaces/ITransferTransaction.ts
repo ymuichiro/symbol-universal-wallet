@@ -5,7 +5,6 @@ export default interface ITransferTransaction {
     networkType: NetworkType;
     deadline?: BigInt;
     feeMultiplier?: BigInt;
-    signerPublicKey: string | undefined;
     mosaics: Mosaic[] | undefined;
     recipientAddress: string;
     message: string | undefined;

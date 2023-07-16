@@ -1,9 +1,17 @@
-import { node, getDataFromApi, Mosaic, Account, hexToUint8, base32 } from '../restApiClient/shared';
+import { getDataFromApi } from './utils';
+import Mosaic from '../models/Mosaic';
+import { Account } from '../models/Account';
+import { hexToUint8 } from '../utils/converter';
+import base32 from '../utils/base32';
 
 export default class AccountService {
+    node: string;
+    constructor(node: string) {
+        this.node = node;
+    }
     public async getAccountInfo(address: string) {
         try {
-            const data = await getDataFromApi(node + '/accounts/' + address);
+            const data = await getDataFromApi(this.node + '/accounts/' + address);
             let mosaics: Mosaic[] = [];
             data.account.mosaics.forEach(m => {
                 mosaics.push({

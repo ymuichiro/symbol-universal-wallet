@@ -1,5 +1,5 @@
 import { NetworkType } from '../models/NetworkType';
-import { TransactionType } from '../models/transactions/TransactionType';
+import { TransactionType } from '../models/TransactionType';
 import Mosaic from '../models/Mosaic';
 import base32 from '../utils/base32';
 import { hexToUint8 } from '../utils/converter';
@@ -47,6 +47,7 @@ export function getTransactionType(number: number): TransactionType {
             return TransactionType[key];
         }
     }
+    console.error('Invalid transaction type: ' + number);
     throw new Error('Invalid transaction type');
 }
 
