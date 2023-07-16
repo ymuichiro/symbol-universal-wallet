@@ -4,16 +4,20 @@ import TransferTransaction from 'symbol/src/models/TransferTransaction';
 import TransactionMeta from 'symbol/src/models/TransactionMeta';
 import { TransactionType }from 'symbol/src/models/TransactionType';
 import  { TransactionGroup, TransactionSearchCriteria } from '../models/SearchCriteria';
+import TransactionSearchResult from '../models/TransactionSearchResult';
+import Pagination from '../models/Pagination';
 
 export default class TransactionService {
     node: string;
     constructor(node: string) {
         this.node = node;
     }
-    public async searchTransactions(group: TransactionGroup, transactionSearchCriteria: TransactionSearchCriteria): Promise<Transaction[]>{
+    public async searchTransactions(group: TransactionGroup, transactionSearchCriteria: TransactionSearchCriteria): Promise<TransactionSearchResult>{
         const queryString = buildQueryString(transactionSearchCriteria);
         const url = `${this.node}/transactions/${group}?${queryString}`;
         const data = await getDataFromApi(url);
+
+        console.log(data);
 
         const transactions: Transaction[] = [];
         data.data.forEach((d: any) => {
@@ -21,7 +25,11 @@ export default class TransactionService {
             if(transaction != undefined)
                 transactions.push(transaction);
         });
-        return transactions;
+        const pagination: Pagination = {
+            pageNumber: data.pagination.pageNumber,
+            pageSize: data.pagination.pageSize,
+        }
+        return {transactions, pagination};
     }
 
     public async getTransactionInfo(group: TransactionGroup, transactionID: string) {
@@ -54,7 +62,7 @@ export default class TransactionService {
             case TransactionType.TransferTransaction:
                 return this.tryParseTransferTransaction(data);
             default:
-                console.error('Transaction type not implemented');
+                console.error('Transaction type not implemented:' + type);
                 return undefined;
         }
     }
