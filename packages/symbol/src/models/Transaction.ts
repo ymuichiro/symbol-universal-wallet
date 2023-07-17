@@ -12,18 +12,18 @@ export default class Transaction {
     public feeMultiplier?: number,
     public payload: string = ''){}
 
-    async build(){};
+  async build(){};
 
-    public async sign(): Promise<string | undefined> {
-      if(this.payload == '') await this.build();
+  public async sign(): Promise<string | undefined> {
+    if(this.payload == '') await this.build();
 
-      if(isMobileDevice()) {
-        window.location.href = `alice://sign?type=request_sign_transaction&data=${this.payload}&callback=${utf8ToHex(callbackUrl)}`;
-        return undefined;
-      } else {
-        setTransactionByPayload(this.payload);
-        const signedTransaction = await requestSign();
-        return signedTransaction.payload;
-      }
+    if(isMobileDevice()) {
+      window.location.href = `alice://sign?type=request_sign_transaction&data=${this.payload}&callback=${utf8ToHex(callbackUrl)}`;
+      return undefined;
+    } else {
+      setTransactionByPayload(this.payload);
+      const signedTransaction = await requestSign();
+      return signedTransaction.payload;
     }
+  }
 }

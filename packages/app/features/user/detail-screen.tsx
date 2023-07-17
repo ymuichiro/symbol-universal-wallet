@@ -4,9 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { createParam } from 'solito';
 import { useLink } from 'solito/link';
 import { Button, Paragraph, Text, XStack } from 'tamagui';
-import AccountService, { AccountInfoDTO } from 'symbol/src/services/AccountService';
-import TransactionService from 'symbol/src/services/TransactionService';
-import { hexToAddress } from 'symbol/src/utils/utils';
+import { AccountService, TransactionService, hexToAddress } from 'symbol';
 
 const { useParam } = createParam<{ id: string; signed_payload: string }>();
 const accountService = new AccountService("13B00FBB13C7644E13BD786F0EA4F97820022A2606759793A5D3525A03F92A2F");
@@ -22,7 +20,7 @@ function ListMosaic({ moasicId, amount }: { moasicId: string; amount: BigInt }) 
 }
 
 export function UserDetailScreen() {
-  const [ accountInfo, setAccountInfo ] = useState<AccountInfoDTO | null>(null);
+  const [ accountInfo, setAccountInfo ] = useState<any | null>(null);
   const [ address, setAddress ] = useState('');
   const [ publicKey, setPublicKey ] = useState('');
 
@@ -67,7 +65,7 @@ export function UserDetailScreen() {
         <Text color="$white" fontFamily="$body">
           Mosaics
         </Text>
-        {accountInfo?.account.mosaics.map((mosaic, index) => (
+        {accountInfo?.account.mosaics.map((mosaic: { id: string; amount: string | number | bigint | boolean; }, index: React.Key | null | undefined) => (
           <ListMosaic key={index} moasicId={mosaic.id} amount={BigInt(mosaic.amount)} /* その他のプロパティ */ />
         ))}
       </div>
