@@ -1,3 +1,4 @@
+import { TransactionRoutesApi } from 'symbol-rest';
 import { Account } from '../models/Account';
 import Mosaic from '../models/Mosaic';
 import base32 from '../utils/base32';

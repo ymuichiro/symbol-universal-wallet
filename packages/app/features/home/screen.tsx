@@ -4,15 +4,10 @@ import LogoSymbolLine from 'app/assets/icons/logo-symbol-line.png';
 import { GAMES_INFO } from 'app/assets/jsons/games';
 import React, { useEffect, useState } from 'react';
 import { Dimensions } from 'react-native';
-import { useLink } from 'solito/link';
 
 const ADDRESS = 'NDKPZZKCKHSXOZ7Q6B6JICUOSBNV5GTZIOBCO3I';
 
 export function HomeScreen() {
-  const linkProps = useLink({
-    href: '/user/nate',
-  });
-
   const [height, setHeight] = useState<number>(Dimensions.get('window').height);
 
   useEffect(() => {
