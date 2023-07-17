@@ -1,8 +1,8 @@
 import Mosaic from '../models/Mosaic';
 import { NetworkType } from '../models/NetworkType';
 import { TransactionType } from '../models/TransactionType';
-import base32 from '../utils/base32';
-import { hexToUint8 } from '../utils/converter';
+import base32 from './base32';
+import { hexToUint8 } from './converter';
 
 export async function getDataFromApi(url: string) {
   const res = await fetch(url);
@@ -13,6 +13,11 @@ export function buildQueryString(obj: any): string {
   const queryString = Object.keys(obj)
     .map((key) => {
       const value = obj[key];
+
+      if (value === undefined || value === null || value === '') {
+        return '';
+      }
+
       if (Array.isArray(value)) {
         return value
           .map((item: any) =>
@@ -28,6 +33,7 @@ export function buildQueryString(obj: any): string {
         return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
       }
     })
+    .filter((param) => param !== '') // 空のパラメータを除外
     .join('&');
 
   return queryString;
