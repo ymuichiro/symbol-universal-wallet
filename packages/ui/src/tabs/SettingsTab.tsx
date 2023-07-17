@@ -16,7 +16,7 @@ export interface SettingsTabProps {
 }
 
 export function SettingsTab(props: SettingsTabProps): JSX.Element {
-  const [sheetElement, setSheetElement] = useState<JSX.Element | null>(<SettingsItemAccounts sheetName="Accounts" />);
+  const [sheetElement, setSheetElement] = useState<JSX.Element | null>(null);
   const [position, setPosition] = useState(0);
 
   const handleCloseSheet = () => {

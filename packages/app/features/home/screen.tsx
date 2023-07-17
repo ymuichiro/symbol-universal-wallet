@@ -22,7 +22,7 @@ export function HomeScreen() {
   return (
     <YStack f={1}>
       <Tabs
-        defaultValue="settings"
+        defaultValue="wallet"
         orientation="horizontal"
         flexDirection="column"
         overflow="hidden"
