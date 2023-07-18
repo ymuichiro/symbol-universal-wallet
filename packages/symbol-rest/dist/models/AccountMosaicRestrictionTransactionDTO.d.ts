@@ -10,8 +10,8 @@ export interface AccountMosaicRestrictionTransactionDTO {
     maxFee: string;
     deadline: string;
     restrictionFlags: AccountRestrictionFlagsEnum;
-    restrictionAdditions: Array<string>;
-    restrictionDeletions: Array<string>;
+    restrictionAdditions?: Array<string>;
+    restrictionDeletions?: Array<string>;
 }
 export declare function instanceOfAccountMosaicRestrictionTransactionDTO(value: object): boolean;
 export declare function AccountMosaicRestrictionTransactionDTOFromJSON(json: any): AccountMosaicRestrictionTransactionDTO;

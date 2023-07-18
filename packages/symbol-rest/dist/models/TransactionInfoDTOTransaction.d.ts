@@ -24,8 +24,8 @@ export interface TransactionInfoDTOTransaction {
     startEpoch: number;
     endEpoch: number;
     transactionsHash: string;
-    cosignatures: Array<CosignatureDTO>;
-    transactions: Array<EmbeddedTransactionInfoDTO>;
+    cosignatures?: Array<CosignatureDTO>;
+    transactions?: Array<EmbeddedTransactionInfoDTO>;
     mosaicId: string;
     amount: string;
     duration: string;
@@ -59,8 +59,8 @@ export interface TransactionInfoDTOTransaction {
     addressAdditions: Array<string>;
     addressDeletions: Array<string>;
     restrictionFlags: AccountRestrictionFlagsEnum;
-    restrictionAdditions: Array<TransactionTypeEnum>;
-    restrictionDeletions: Array<TransactionTypeEnum>;
+    restrictionAdditions?: Array<TransactionTypeEnum>;
+    restrictionDeletions?: Array<TransactionTypeEnum>;
     referenceMosaicId: string;
     restrictionKey: string;
     previousRestrictionValue: string;

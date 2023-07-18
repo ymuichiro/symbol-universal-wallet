@@ -5,5 +5,6 @@ export { default as TransactionBuilderService } from './services/TransactionBuil
 export { default as Mosaic } from './models/Mosaic';
 export { default as Transaction } from './models/Transaction';
 export { default as TransferTransaction } from './models/TransferTransaction';
+export { default as MosaicTransaction } from './models/MosaicTransaction';
 export { TransactionType } from './models/TransactionType';
 export { NetworkType } from './models/NetworkType';

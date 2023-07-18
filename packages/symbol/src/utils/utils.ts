@@ -9,6 +9,10 @@ export async function getDataFromApi(url: string) {
   return res.json();
 }
 
+function isStringArray(arr: any[]) {
+  return Array.isArray(arr) && arr.every((element) => typeof element === 'string');
+}
+
 export function buildQueryString(obj: any): string {
   const queryString = Object.keys(obj)
     .map((key) => {
@@ -19,23 +23,29 @@ export function buildQueryString(obj: any): string {
       }
 
       if (Array.isArray(value)) {
-        return value
+        if(isStringArray(value)){
+          console.log('isStringArray');
+          return value
+          .map((item: any) => `${key}=${item}`)
+          .join('&');
+        } else {
+          return value
           .map((item: any) =>
             Object.keys(item)
               .map(
                 (itemKey) =>
-                  `${encodeURIComponent(key)}[${encodeURIComponent(itemKey)}]=${encodeURIComponent(item[itemKey])}`
+                  `${key}[${itemKey}]=${item[itemKey]}`
               )
               .join('&')
           )
           .join('&');
+        }      
       } else {
-        return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+        return `${key}=${value}`;
       }
     })
     .filter((param) => param !== '') // 空のパラメータを除外
     .join('&');
-
   return queryString;
 }
 

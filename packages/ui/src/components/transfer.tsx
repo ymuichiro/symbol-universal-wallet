@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Button, Input, XStack } from 'tamagui';
-import { TransactionService, NetworkType, Mosaic, TransferTransaction }from 'symbol';
+import { TransactionService, NetworkType, Mosaic, TransferTransaction, MosaicTransaction }from 'symbol';
 
 export function TransferForm() {
   const [address, setAddress] = useState('');
@@ -50,10 +50,10 @@ export function TransferForm() {
         onPress={async () => {
         const transferTransaction = new TransferTransaction(
           NetworkType.TESTNET,
-          undefined,
-          undefined,
-          [new Mosaic(mosaicId, BigInt(amount))],
           address,
+          undefined,
+          undefined,
+          [new Mosaic(mosaicId, BigInt(amount)), new Mosaic("173AC1E38CBAD11D", BigInt(1))],
           message
         );
         const signedPayload = await transferTransaction.sign();
@@ -64,7 +64,28 @@ export function TransferForm() {
         }
       }}
       >
-        Sign
+        Transfer
+      </Button>
+      <Button
+        onPress={async () => {
+        const mosaicTransaction = new MosaicTransaction(
+          "13B00FBB13C7644E13BD786F0EA4F97820022A2606759793A5D3525A03F92A2F",
+          0n,
+          0,
+          ["transferable"],
+          'increase',
+          10000n,
+          NetworkType.TESTNET,
+        );
+        const signedPayload = await mosaicTransaction.sign();
+        if(signedPayload != undefined) {
+          TransactionService.announceTransaction("https://mikun-testnet.tk:3001", signedPayload).then((result) => {
+            console.log(result)
+          });
+        }
+      }}
+      >
+        Mosaic
       </Button>
     </div>
   );

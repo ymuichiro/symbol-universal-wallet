@@ -9,8 +9,7 @@ export default class TransactionService {
         new Configuration({
           basePath: node,
       }));
-      const transaction = await transactionRoutesApi.getConfirmedTransactionRaw({ transactionId: transactionId })
-      return await transaction.raw.json()
+      return await transactionRoutesApi.getConfirmedTransaction({ transactionId: transactionId })
     } catch (e) {
       if (e instanceof Error) {
         throw e;

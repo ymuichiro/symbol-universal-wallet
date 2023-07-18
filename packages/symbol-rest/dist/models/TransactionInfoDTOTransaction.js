@@ -26,8 +26,6 @@ export function instanceOfTransactionInfoDTOTransaction(value) {
     isInstance = isInstance && "startEpoch" in value;
     isInstance = isInstance && "endEpoch" in value;
     isInstance = isInstance && "transactionsHash" in value;
-    isInstance = isInstance && "cosignatures" in value;
-    isInstance = isInstance && "transactions" in value;
     isInstance = isInstance && "mosaicId" in value;
     isInstance = isInstance && "amount" in value;
     isInstance = isInstance && "duration" in value;
@@ -59,8 +57,6 @@ export function instanceOfTransactionInfoDTOTransaction(value) {
     isInstance = isInstance && "addressAdditions" in value;
     isInstance = isInstance && "addressDeletions" in value;
     isInstance = isInstance && "restrictionFlags" in value;
-    isInstance = isInstance && "restrictionAdditions" in value;
-    isInstance = isInstance && "restrictionDeletions" in value;
     isInstance = isInstance && "referenceMosaicId" in value;
     isInstance = isInstance && "restrictionKey" in value;
     isInstance = isInstance && "previousRestrictionValue" in value;
@@ -91,8 +87,8 @@ export function TransactionInfoDTOTransactionFromJSONTyped(json, ignoreDiscrimin
         'startEpoch': json['startEpoch'],
         'endEpoch': json['endEpoch'],
         'transactionsHash': json['transactionsHash'],
-        'cosignatures': (json['cosignatures'].map(CosignatureDTOFromJSON)),
-        'transactions': (json['transactions'].map(EmbeddedTransactionInfoDTOFromJSON)),
+        'cosignatures': !exists(json, 'cosignatures') ? undefined : (json['cosignatures'].map(CosignatureDTOFromJSON)),
+        'transactions': !exists(json, 'transactions') ? undefined : (json['transactions'].map(EmbeddedTransactionInfoDTOFromJSON)),
         'mosaicId': json['mosaicId'],
         'amount': json['amount'],
         'duration': json['duration'],
@@ -126,8 +122,8 @@ export function TransactionInfoDTOTransactionFromJSONTyped(json, ignoreDiscrimin
         'addressAdditions': json['addressAdditions'],
         'addressDeletions': json['addressDeletions'],
         'restrictionFlags': AccountRestrictionFlagsEnumFromJSON(json['restrictionFlags']),
-        'restrictionAdditions': (json['restrictionAdditions'].map(TransactionTypeEnumFromJSON)),
-        'restrictionDeletions': (json['restrictionDeletions'].map(TransactionTypeEnumFromJSON)),
+        'restrictionAdditions': !exists(json, 'restrictionAdditions') ? undefined : (json['restrictionAdditions'].map(TransactionTypeEnumFromJSON)),
+        'restrictionDeletions': !exists(json, 'restrictionDeletions') ? undefined : (json['restrictionDeletions'].map(TransactionTypeEnumFromJSON)),
         'referenceMosaicId': json['referenceMosaicId'],
         'restrictionKey': json['restrictionKey'],
         'previousRestrictionValue': json['previousRestrictionValue'],
@@ -159,8 +155,8 @@ export function TransactionInfoDTOTransactionToJSON(value) {
         'startEpoch': value.startEpoch,
         'endEpoch': value.endEpoch,
         'transactionsHash': value.transactionsHash,
-        'cosignatures': (value.cosignatures.map(CosignatureDTOToJSON)),
-        'transactions': (value.transactions.map(EmbeddedTransactionInfoDTOToJSON)),
+        'cosignatures': value.cosignatures === undefined ? undefined : (value.cosignatures.map(CosignatureDTOToJSON)),
+        'transactions': value.transactions === undefined ? undefined : (value.transactions.map(EmbeddedTransactionInfoDTOToJSON)),
         'mosaicId': value.mosaicId,
         'amount': value.amount,
         'duration': value.duration,
@@ -194,8 +190,8 @@ export function TransactionInfoDTOTransactionToJSON(value) {
         'addressAdditions': value.addressAdditions,
         'addressDeletions': value.addressDeletions,
         'restrictionFlags': AccountRestrictionFlagsEnumToJSON(value.restrictionFlags),
-        'restrictionAdditions': (value.restrictionAdditions.map(TransactionTypeEnumToJSON)),
-        'restrictionDeletions': (value.restrictionDeletions.map(TransactionTypeEnumToJSON)),
+        'restrictionAdditions': value.restrictionAdditions === undefined ? undefined : (value.restrictionAdditions.map(TransactionTypeEnumToJSON)),
+        'restrictionDeletions': value.restrictionDeletions === undefined ? undefined : (value.restrictionDeletions.map(TransactionTypeEnumToJSON)),
         'referenceMosaicId': value.referenceMosaicId,
         'restrictionKey': value.restrictionKey,
         'previousRestrictionValue': value.previousRestrictionValue,

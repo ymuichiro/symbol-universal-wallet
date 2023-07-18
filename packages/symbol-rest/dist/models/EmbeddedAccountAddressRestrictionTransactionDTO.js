@@ -1,3 +1,4 @@
+import { exists } from '../runtime';
 import { AccountRestrictionFlagsEnumFromJSON, AccountRestrictionFlagsEnumToJSON, } from './AccountRestrictionFlagsEnum';
 import { NetworkTypeEnumFromJSON, NetworkTypeEnumToJSON, } from './NetworkTypeEnum';
 export function instanceOfEmbeddedAccountAddressRestrictionTransactionDTO(value) {
@@ -7,8 +8,6 @@ export function instanceOfEmbeddedAccountAddressRestrictionTransactionDTO(value)
     isInstance = isInstance && "network" in value;
     isInstance = isInstance && "type" in value;
     isInstance = isInstance && "restrictionFlags" in value;
-    isInstance = isInstance && "restrictionAdditions" in value;
-    isInstance = isInstance && "restrictionDeletions" in value;
     return isInstance;
 }
 export function EmbeddedAccountAddressRestrictionTransactionDTOFromJSON(json) {
@@ -24,8 +23,8 @@ export function EmbeddedAccountAddressRestrictionTransactionDTOFromJSONTyped(jso
         'network': NetworkTypeEnumFromJSON(json['network']),
         'type': json['type'],
         'restrictionFlags': AccountRestrictionFlagsEnumFromJSON(json['restrictionFlags']),
-        'restrictionAdditions': json['restrictionAdditions'],
-        'restrictionDeletions': json['restrictionDeletions'],
+        'restrictionAdditions': !exists(json, 'restrictionAdditions') ? undefined : json['restrictionAdditions'],
+        'restrictionDeletions': !exists(json, 'restrictionDeletions') ? undefined : json['restrictionDeletions'],
     };
 }
 export function EmbeddedAccountAddressRestrictionTransactionDTOToJSON(value) {

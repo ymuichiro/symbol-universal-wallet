@@ -2,8 +2,8 @@ import type { AccountRestrictionFlagsEnum } from './AccountRestrictionFlagsEnum'
 import type { TransactionTypeEnum } from './TransactionTypeEnum';
 export interface AccountOperationRestrictionTransactionBodyDTO {
     restrictionFlags: AccountRestrictionFlagsEnum;
-    restrictionAdditions: Array<TransactionTypeEnum>;
-    restrictionDeletions: Array<TransactionTypeEnum>;
+    restrictionAdditions?: Array<TransactionTypeEnum>;
+    restrictionDeletions?: Array<TransactionTypeEnum>;
 }
 export declare function instanceOfAccountOperationRestrictionTransactionBodyDTO(value: object): boolean;
 export declare function AccountOperationRestrictionTransactionBodyDTOFromJSON(json: any): AccountOperationRestrictionTransactionBodyDTO;
