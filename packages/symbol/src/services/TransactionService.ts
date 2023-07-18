@@ -25,8 +25,7 @@ export default class TransactionService {
         new Configuration({
           basePath: node,
       }));
-      const transaction = await transactionRoutesApi.getUnconfirmedTransactionRaw({ transactionId: transactionId })
-      return await transaction.raw.json()
+      return await transactionRoutesApi.getUnconfirmedTransaction({ transactionId: transactionId })
     } catch (e) {
       if (e instanceof Error) {
         throw e;
@@ -42,8 +41,7 @@ export default class TransactionService {
         new Configuration({
           basePath: node,
       }));
-      const transaction = await transactionRoutesApi.getPartialTransactionRaw({ transactionId: transactionId })
-      return await transaction.raw.json()
+      return await transactionRoutesApi.getPartialTransaction({ transactionId: transactionId })
     } catch (e) {
       if (e instanceof Error) {
         throw e;
@@ -59,8 +57,7 @@ export default class TransactionService {
         new Configuration({
           basePath: node,
       }));
-      const transactions = await transactionRoutesApi.searchConfirmedTransactionsRaw(searchConfirmedTransactionsRequest)
-      return await transactions.raw.json()
+      return await transactionRoutesApi.searchConfirmedTransactions(searchConfirmedTransactionsRequest)
     } catch (e) {
       if (e instanceof Error) {
         throw e;
@@ -76,8 +73,7 @@ export default class TransactionService {
         new Configuration({
           basePath: node,
       }));
-      const transactions = await transactionRoutesApi.searchUnconfirmedTransactionsRaw(searchConfirmedTransactionsRequest)
-      return await transactions.raw.json()
+      return await transactionRoutesApi.searchUnconfirmedTransactions(searchConfirmedTransactionsRequest)
     } catch (e) {
       if (e instanceof Error) {
         throw e;
@@ -93,8 +89,7 @@ export default class TransactionService {
         new Configuration({
           basePath: node,
       }));
-      const transactions = await transactionRoutesApi.searchPartialTransactionsRaw(searchConfirmedTransactionsRequest)
-      return await transactions.raw.json()
+      return await transactionRoutesApi.searchPartialTransactions(searchConfirmedTransactionsRequest)
     } catch (e) {
       if (e instanceof Error) {
         throw e;
