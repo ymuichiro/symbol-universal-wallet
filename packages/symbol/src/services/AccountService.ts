@@ -1,5 +1,4 @@
 import { AccountInfoDTO, AccountRoutesApi, Configuration, Mosaic } from 'symbol-rest/dist/';
-export { AccountInfoDTO } from 'symbol-rest/dist/';
 
 export default class AccountService {
   private _mosaics: Mosaic[] = [];
