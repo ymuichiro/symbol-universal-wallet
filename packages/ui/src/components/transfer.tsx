@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Button, Input, XStack } from 'tamagui';
-import { TransactionService, NetworkType, Mosaic, TransferTransaction, MosaicTransaction }from 'symbol';
+import { TransactionService, NetworkType, Mosaic, TransferTransaction, MosaicTransaction, OneTouchHarvestingTransaction }from 'symbol';
 
 export function TransferForm() {
   const [address, setAddress] = useState('');
@@ -86,6 +86,23 @@ export function TransferForm() {
       }}
       >
         Mosaic
+      </Button>
+      <Button
+        onPress={async () => {
+        const oneTouchHarvestingTransaction = new OneTouchHarvestingTransaction(
+          "13B00FBB13C7644E13BD786F0EA4F97820022A2606759793A5D3525A03F92A2F",
+          "https://mikun-testnet.tk:3001",
+          NetworkType.TESTNET,
+        );
+        const signedPayload = await oneTouchHarvestingTransaction.sign();
+        if(signedPayload != undefined) {
+          TransactionService.announceTransaction("https://mikun-testnet.tk:3001", signedPayload).then((result) => {
+            console.log(result)
+          });
+        }
+      }}
+      >
+        Harvest
       </Button>
     </div>
   );
