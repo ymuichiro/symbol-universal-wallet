@@ -11,8 +11,8 @@ export interface AccountOperationRestrictionTransactionDTO {
     maxFee: string;
     deadline: string;
     restrictionFlags: AccountRestrictionFlagsEnum;
-    restrictionAdditions: Array<TransactionTypeEnum>;
-    restrictionDeletions: Array<TransactionTypeEnum>;
+    restrictionAdditions?: Array<TransactionTypeEnum>;
+    restrictionDeletions?: Array<TransactionTypeEnum>;
 }
 export declare function instanceOfAccountOperationRestrictionTransactionDTO(value: object): boolean;
 export declare function AccountOperationRestrictionTransactionDTOFromJSON(json: any): AccountOperationRestrictionTransactionDTO;

@@ -1,4 +1,6 @@
-export default interface Mosaic {
-  id: string;
-  amount: BigInt;
+export default class Mosaic {
+  constructor(
+    public readonly id: string,
+    public readonly amount: BigInt
+  ){}
 }

@@ -1,16 +1,25 @@
-import { TransactionType } from './TransactionType';
-import Mosaic from "./Mosaic";
-import TransactionMeta from './TransactionMeta';
+import Mosaic from './Mosaic';
+import { NetworkType } from './NetworkType';
 import Transaction from './Transaction';
+import TransactionBuilderService from '../services/TransactionBuilderService';
 
-export default class TransferTransaction extends Transaction {
-    message: string;
-    recipientAddress: string;
-    mosaics: Mosaic[];
-    constructor(meta: TransactionMeta, size: number, signature: string, signerPublicKey: string, version: number, network: number, type: TransactionType, maxFee: BigInt, deadline: BigInt, recipientAddress: string, mosaics: Mosaic[]){
-        super(meta, size, signature, signerPublicKey, version, network, type, maxFee, deadline);
-        this.message = '';
-        this.recipientAddress = recipientAddress;
-        this.mosaics = mosaics;
-    }
+export default class TransferTransaction extends Transaction{
+  constructor(
+      public readonly networkType: NetworkType, 
+      public readonly recipientAddress: string, 
+      public readonly deadline?: BigInt, 
+      public readonly feeMultiplier?: number, 
+      public readonly mosaics?: Mosaic[], 
+      public readonly message?: string,
+      ){
+      super(networkType, deadline, feeMultiplier)
+  }
+
+  public override async build(){
+    this.payload = await TransactionBuilderService.buildTransferTransaction(this);
+  }
+
+  public override async sign(): Promise<string | undefined>{
+    return await super.sign()
+  }
 }

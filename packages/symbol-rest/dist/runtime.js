@@ -1,4 +1,4 @@
-export const BASE_PATH = "http://localhost:3000".replace(/\/+$/, "");
+export const BASE_PATH = "https://symbolnode.blockchain-authn.app:3001".replace(/\/+$/, "");
 export class Configuration {
     configuration;
     constructor(configuration = {}) {

@@ -50,8 +50,8 @@ export interface EmbeddedTransactionInfoDTOTransaction {
     addressAdditions: Array<string>;
     addressDeletions: Array<string>;
     restrictionFlags: AccountRestrictionFlagsEnum;
-    restrictionAdditions: Array<TransactionTypeEnum>;
-    restrictionDeletions: Array<TransactionTypeEnum>;
+    restrictionAdditions?: Array<TransactionTypeEnum>;
+    restrictionDeletions?: Array<TransactionTypeEnum>;
     referenceMosaicId: string;
     restrictionKey: string;
     previousRestrictionValue: string;
