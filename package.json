@@ -30,6 +30,8 @@
   "dependencies": {
     "@babel/runtime": "^7.18.9",
     "@manypkg/cli": "^0.19.1",
+    "@zxing/browser": "^0.1.4",
+    "@zxing/library": "^0.20.0",
     "check-dependency-version-consistency": "^3.0.3",
     "eslint": "^8.21.0",
     "node-gyp": "^9.3.1",

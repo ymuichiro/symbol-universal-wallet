@@ -1,9 +1,12 @@
 import { Button } from '@tamagui/button';
-import { QrCode } from '@tamagui/lucide-icons';
+import { Camera, QrCode } from '@tamagui/lucide-icons';
 import { XStack, YStack } from '@tamagui/stacks';
 import { Paragraph } from '@tamagui/text';
 
-interface Props {}
+interface Props {
+  onPressMyQR: () => void;
+  onPressReadQR: () => void;
+}
 
 /**
  * Cards displaying frequently used actions
@@ -13,17 +16,12 @@ export function FavoriteActions(props: Props): JSX.Element {
     {
       icon: QrCode,
       label: 'My QR',
-      onpress: () => {},
+      onpress: props.onPressMyQR,
     },
     {
-      icon: QrCode,
-      label: 'Receive',
-      onpress: () => {},
-    },
-    {
-      icon: QrCode,
+      icon: Camera,
       label: 'Read QR',
-      onpress: () => {},
+      onpress: props.onPressReadQR,
     },
   ];
 
