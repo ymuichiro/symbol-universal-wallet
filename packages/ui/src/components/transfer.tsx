@@ -1,19 +1,8 @@
 import { useState, useEffect } from 'react';
-import { requestSign, setTransactionByPayload } from 'sss-module';
-import SymbolApiService from 'symbol/src/services/SymbolApiService';
-import { utf8ToHex } from 'symbol/src/utils/converter';
-import { isMobileDevice } from 'symbol/src/utils/isMobileDevice';
 import { Button, Input, XStack } from 'tamagui';
-import TransactionBuilderService from 'symbol/src/services/TransactionBuilderService';
-import { NetworkType } from 'symbol/src/models/NetworkType';
-import Mosaic from 'symbol/src/models/Mosaic';
-import ITransferTransaction from 'symbol/src/models/interfaces/ITransferTransaction';
+import { TransactionService, NetworkType, Mosaic, TransferTransaction, MosaicTransaction, OneTouchHarvestingTransaction }from 'symbol';
 
-export function TransferForm({
-  callback,
-}: {
-  callback?: string;
-}) {
+export function TransferForm() {
   const [address, setAddress] = useState('');
   const [message, setMessage] = useState('');
   const [mosaicId, setMosaicId] = useState('');
@@ -39,25 +28,6 @@ export function TransferForm({
     setAmount("1");
   }, []);
 
-  async function getSignedPayload(payload: string) {
-    if (!isMobileDevice()) {
-      setTransactionByPayload(payload);
-      const signed = await requestSign();
-      const symbolApiService = new SymbolApiService("https://mikun-testnet.tk:3001");
-      const transactionSerice = symbolApiService.createTransactionService();
-      const result = await transactionSerice.announce(signed.payload);
-    } else {
-      callAlice(payload);
-    }
-  }
-
-  async function callAlice(payload: string) {
-    console.log(utf8ToHex(callback!));
-    window.location.href = `alice://sign?type=request_sign_transaction&data=${payload}&callback=${utf8ToHex(
-      callback!
-    )}`;
-  }
-
   return (
     <div style={{ marginTop: '20px' }}>
       <XStack alignItems="center" space="$2">
@@ -78,22 +48,61 @@ export function TransferForm({
       </XStack>
       <Button
         onPress={async () => {
-          const mosaics: Mosaic[] = [{
-            id: mosaicId,
-            amount: BigInt(amount)
-        }];
-
-        const transferTransaction: ITransferTransaction = {
-            networkType: NetworkType.TESTNET,
-            mosaics,
-            recipientAddress: address,
-            message: message
+        const transferTransaction = new TransferTransaction(
+          NetworkType.TESTNET,
+          address,
+          undefined,
+          undefined,
+          [new Mosaic(mosaicId, BigInt(amount)), new Mosaic("173AC1E38CBAD11D", BigInt(1))],
+          message
+        );
+        const signedPayload = await transferTransaction.sign();
+        if(signedPayload != undefined) {
+          TransactionService.announceTransaction("https://mikun-testnet.tk:3001", signedPayload).then((result) => {
+            console.log(result)
+          });
         }
-          const payload = await TransactionBuilderService.buildTransferTransaction(transferTransaction);
-          await getSignedPayload(payload);
-        }}
+      }}
       >
-        Sign
+        Transfer
+      </Button>
+      <Button
+        onPress={async () => {
+        const mosaicTransaction = new MosaicTransaction(
+          "13B00FBB13C7644E13BD786F0EA4F97820022A2606759793A5D3525A03F92A2F",
+          0n,
+          0,
+          ["transferable"],
+          'increase',
+          10000n,
+          NetworkType.TESTNET,
+        );
+        const signedPayload = await mosaicTransaction.sign();
+        if(signedPayload != undefined) {
+          TransactionService.announceTransaction("https://mikun-testnet.tk:3001", signedPayload).then((result) => {
+            console.log(result)
+          });
+        }
+      }}
+      >
+        Mosaic
+      </Button>
+      <Button
+        onPress={async () => {
+        const oneTouchHarvestingTransaction = new OneTouchHarvestingTransaction(
+          "13B00FBB13C7644E13BD786F0EA4F97820022A2606759793A5D3525A03F92A2F",
+          "https://mikun-testnet.tk:3001",
+          NetworkType.TESTNET,
+        );
+        const signedPayload = await oneTouchHarvestingTransaction.sign();
+        if(signedPayload != undefined) {
+          TransactionService.announceTransaction("https://mikun-testnet.tk:3001", signedPayload).then((result) => {
+            console.log(result)
+          });
+        }
+      }}
+      >
+        Harvest
       </Button>
     </div>
   );

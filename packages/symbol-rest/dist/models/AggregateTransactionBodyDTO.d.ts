@@ -1,7 +1,7 @@
 import type { CosignatureDTO } from './CosignatureDTO';
 export interface AggregateTransactionBodyDTO {
     transactionsHash: string;
-    cosignatures: Array<CosignatureDTO>;
+    cosignatures?: Array<CosignatureDTO>;
 }
 export declare function instanceOfAggregateTransactionBodyDTO(value: object): boolean;
 export declare function AggregateTransactionBodyDTOFromJSON(json: any): AggregateTransactionBodyDTO;

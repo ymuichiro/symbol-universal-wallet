@@ -1,3 +1,4 @@
+import { exists } from '../runtime';
 import { AccountRestrictionFlagsEnumFromJSON, AccountRestrictionFlagsEnumToJSON, } from './AccountRestrictionFlagsEnum';
 import { NetworkTypeEnumFromJSON, NetworkTypeEnumToJSON, } from './NetworkTypeEnum';
 import { TransactionTypeEnumFromJSON, TransactionTypeEnumToJSON, } from './TransactionTypeEnum';
@@ -12,8 +13,6 @@ export function instanceOfAccountOperationRestrictionTransactionDTO(value) {
     isInstance = isInstance && "maxFee" in value;
     isInstance = isInstance && "deadline" in value;
     isInstance = isInstance && "restrictionFlags" in value;
-    isInstance = isInstance && "restrictionAdditions" in value;
-    isInstance = isInstance && "restrictionDeletions" in value;
     return isInstance;
 }
 export function AccountOperationRestrictionTransactionDTOFromJSON(json) {
@@ -33,8 +32,8 @@ export function AccountOperationRestrictionTransactionDTOFromJSONTyped(json, ign
         'maxFee': json['maxFee'],
         'deadline': json['deadline'],
         'restrictionFlags': AccountRestrictionFlagsEnumFromJSON(json['restrictionFlags']),
-        'restrictionAdditions': (json['restrictionAdditions'].map(TransactionTypeEnumFromJSON)),
-        'restrictionDeletions': (json['restrictionDeletions'].map(TransactionTypeEnumFromJSON)),
+        'restrictionAdditions': !exists(json, 'restrictionAdditions') ? undefined : (json['restrictionAdditions'].map(TransactionTypeEnumFromJSON)),
+        'restrictionDeletions': !exists(json, 'restrictionDeletions') ? undefined : (json['restrictionDeletions'].map(TransactionTypeEnumFromJSON)),
     };
 }
 export function AccountOperationRestrictionTransactionDTOToJSON(value) {
@@ -54,7 +53,7 @@ export function AccountOperationRestrictionTransactionDTOToJSON(value) {
         'maxFee': value.maxFee,
         'deadline': value.deadline,
         'restrictionFlags': AccountRestrictionFlagsEnumToJSON(value.restrictionFlags),
-        'restrictionAdditions': (value.restrictionAdditions.map(TransactionTypeEnumToJSON)),
-        'restrictionDeletions': (value.restrictionDeletions.map(TransactionTypeEnumToJSON)),
+        'restrictionAdditions': value.restrictionAdditions === undefined ? undefined : (value.restrictionAdditions.map(TransactionTypeEnumToJSON)),
+        'restrictionDeletions': value.restrictionDeletions === undefined ? undefined : (value.restrictionDeletions.map(TransactionTypeEnumToJSON)),
     };
 }

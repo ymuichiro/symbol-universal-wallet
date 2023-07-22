@@ -1,22 +1,43 @@
-import { getDataFromApi } from './utils';
-import ITransferTransaction from 'symbol/src/models/interfaces/ITransferTransaction';
-import { buildQueryString } from 'symbol/src/services/utils';
+import { getDataFromApi, buildQueryString } from '../utils/utils';
+import TransferTransaction from '../models/TransferTransaction';
+import OneTouchHarvestingTransaction from '../models/OneTouchHarvestingTransaction';
+import MosaicTransaction from '../models/MosaicTransaction';
 
 const BACKEND = "http://localhost:3000";
 // const BACKEND = "http://192.168.10.4:3000";
 
 export default class TransactionBuilderService {
-    static async buildTransferTransaction(transferTransaction: ITransferTransaction): Promise<string> {
-        try{
-            console.log(BACKEND);
-            const queryString = buildQueryString(transferTransaction);
-            const url = `${BACKEND}/api/transactions/transfer?${queryString}`;
-            console.log(url);
-            const result = await getDataFromApi(url)
-            console.log(result);
-            return result.payload;
-        } catch(e: any) {
-            throw new Error(e.message);
-        }
+  static async buildTransferTransaction(transferTransaction: TransferTransaction): Promise<string> {
+      try{
+          const queryString = buildQueryString(transferTransaction);
+          const url = new URL(`${BACKEND}/api/transactions/transfer?${queryString}`);
+          console.log(url.toString());
+          const result = await getDataFromApi(url.toString());
+          return result.payload;
+      } catch(e: any) {
+          throw new Error(e.message);
+      }
+  }
+
+  static async buildMosaicTransaction(mosaicTransaction: MosaicTransaction): Promise<string> {
+    try{
+        const queryString = buildQueryString(mosaicTransaction);
+        const url = new URL(`${BACKEND}/api/transactions/mosaic?${queryString}`);
+        const result = await getDataFromApi(url.toString());
+        return result.payload;
+    } catch(e: any) {
+        throw new Error(e.message);
     }
+  }
+
+  static async buildOneTouchHarvestingTransaction(oneTouchHarvestingTransaction: OneTouchHarvestingTransaction): Promise<string> {
+    try{
+      const queryString = buildQueryString(oneTouchHarvestingTransaction);
+      const url = new URL(`${BACKEND}/api/transactions/harvest?${queryString}`);
+      const result = await getDataFromApi(url.toString());
+      return result.payload;
+  } catch(e: any) {
+      throw new Error(e.message);
+  }
+  }
 }

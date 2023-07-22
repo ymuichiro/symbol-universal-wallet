@@ -6,8 +6,8 @@ export interface EmbeddedAccountAddressRestrictionTransactionDTO {
     network: NetworkTypeEnum;
     type: number;
     restrictionFlags: AccountRestrictionFlagsEnum;
-    restrictionAdditions: Array<string>;
-    restrictionDeletions: Array<string>;
+    restrictionAdditions?: Array<string>;
+    restrictionDeletions?: Array<string>;
 }
 export declare function instanceOfEmbeddedAccountAddressRestrictionTransactionDTO(value: object): boolean;
 export declare function EmbeddedAccountAddressRestrictionTransactionDTOFromJSON(json: any): EmbeddedAccountAddressRestrictionTransactionDTO;

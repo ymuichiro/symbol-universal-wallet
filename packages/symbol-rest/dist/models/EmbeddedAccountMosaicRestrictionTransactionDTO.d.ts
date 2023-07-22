@@ -6,8 +6,8 @@ export interface EmbeddedAccountMosaicRestrictionTransactionDTO {
     network: NetworkTypeEnum;
     type: number;
     restrictionFlags: AccountRestrictionFlagsEnum;
-    restrictionAdditions: Array<string>;
-    restrictionDeletions: Array<string>;
+    restrictionAdditions?: Array<string>;
+    restrictionDeletions?: Array<string>;
 }
 export declare function instanceOfEmbeddedAccountMosaicRestrictionTransactionDTO(value: object): boolean;
 export declare function EmbeddedAccountMosaicRestrictionTransactionDTOFromJSON(json: any): EmbeddedAccountMosaicRestrictionTransactionDTO;

@@ -1,107 +1,155 @@
-import Transaction from 'symbol/src/models/Transaction';
-import TransactionMeta from 'symbol/src/models/TransactionMeta';
-import { TransactionType } from 'symbol/src/models/TransactionType';
-import TransferTransaction from 'symbol/src/models/TransferTransaction';
-import Pagination from '../models/Pagination';
-import { TransactionGroup, TransactionSearchCriteria } from '../models/SearchCriteria';
-import TransactionSearchResult from '../models/TransactionSearchResult';
-import {
-  buildQueryString,
-  convertToMosaicArray,
-  getDataFromApi,
-  getNetworkType,
-  getTransactionType,
-  hexToAddress,
-} from './utils';
+import { TransactionRoutesApi, Configuration, AnnouncePartialTransactionRequest, SearchConfirmedTransactionsRequest, AnnounceCosignatureTransactionRequest, AnnounceTransactionRequest } from 'symbol-rest/dist/';
 
 export default class TransactionService {
-  node: string;
-  constructor(node: string) {
-    this.node = node;
-  }
-  public async searchTransactions(
-    group: TransactionGroup,
-    transactionSearchCriteria: TransactionSearchCriteria
-  ): Promise<TransactionSearchResult> {
-    const queryString = buildQueryString(transactionSearchCriteria);
-    const url = `${this.node}/transactions/${group}?${queryString}`;
-    const data = await getDataFromApi(url);
+  constructor() {}
 
-    console.log(data);
-
-    const transactions: Transaction[] = [];
-    data.data.forEach((d: any) => {
-      const transaction = TransactionService.tryParseTransaction(d);
-      if (transaction != undefined) transactions.push(transaction);
-    });
-    const pagination: Pagination = {
-      pageNumber: data.pagination.pageNumber,
-      pageSize: data.pagination.pageSize,
-    };
-    return { transactions, pagination };
-  }
-
-  public async getTransactionInfo(group: TransactionGroup, transactionID: string) {
+  static async getConfirmedTransaction(node: string, transactionId: string) {
     try {
-      const url = `${this.node}/transactions/${group}/${transactionID}`;
-      const data = await getDataFromApi(url);
-      return TransactionService.tryParseTransaction(data);
+      const transactionRoutesApi = new TransactionRoutesApi(
+        new Configuration({
+          basePath: node,
+      }));
+      return await transactionRoutesApi.getConfirmedTransaction({ transactionId: transactionId })
     } catch (e) {
       if (e instanceof Error) {
         throw e;
       } else {
-        throw new Error();
+        throw new Error(`${ this.name } ${this.getConfirmedTransaction.name} error}`);
       }
     }
   }
 
-  public async announce(payload: string): Promise<string> {
-    const data = {
-      payload: payload,
-    };
-    const result = await fetch(this.node + '/transactions', {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-    return result.json();
-  }
-
-  static tryParseTransaction(data: any): Transaction | undefined {
-    const { type } = data.transaction;
-    switch (getTransactionType(type)) {
-      case TransactionType.TransferTransaction:
-        return this.tryParseTransferTransaction(data);
-      default:
-        console.error('Transaction type not implemented:' + type);
-        return undefined;
+  static async getUnconfirmedTransaction(node: string, transactionId: string) {
+    try {
+      const transactionRoutesApi = new TransactionRoutesApi(
+        new Configuration({
+          basePath: node,
+      }));
+      return await transactionRoutesApi.getUnconfirmedTransaction({ transactionId: transactionId })
+    } catch (e) {
+      if (e instanceof Error) {
+        throw e;
+      } else {
+        throw new Error(`${ this.name } ${this.getUnconfirmedTransaction.name} error}`);
+      }
     }
   }
 
-  static tryParseMeta(meta: any): TransactionMeta {
-    const { height, hash, merkleComponentHash, index, timestamp, feeMultiplier } = meta;
-    return new TransactionMeta(Number(height), hash, merkleComponentHash, index, BigInt(timestamp), feeMultiplier);
+  static async getPartialTransaction(node: string, transactionId: string) {
+    try {
+      const transactionRoutesApi = new TransactionRoutesApi(
+        new Configuration({
+          basePath: node,
+      }));
+      return await transactionRoutesApi.getPartialTransaction({ transactionId: transactionId })
+    } catch (e) {
+      if (e instanceof Error) {
+        throw e;
+      } else {
+        throw new Error(`${ this.name } ${this.getPartialTransaction.name} error}`);
+      }
+    }
   }
 
-  static tryParseTransferTransaction(data: any): TransferTransaction {
-    const { meta } = data;
-    const { size, signature, signerPublicKey, version, network, type, maxFee, deadline, recipientAddress, mosaics } =
-      data.transaction;
-    const transactionMeta = this.tryParseMeta(meta);
-    return new TransferTransaction(
-      transactionMeta,
-      size,
-      signature,
-      signerPublicKey,
-      version,
-      getNetworkType(network),
-      getTransactionType(type),
-      BigInt(maxFee),
-      BigInt(deadline),
-      hexToAddress(recipientAddress),
-      convertToMosaicArray(mosaics)
-    );
+  static async searchConfirmedTransactions(node: string, searchConfirmedTransactionsRequest: SearchConfirmedTransactionsRequest = {}) {
+    try {
+      const transactionRoutesApi = new TransactionRoutesApi(
+        new Configuration({
+          basePath: node,
+      }));
+      return await transactionRoutesApi.searchConfirmedTransactions(searchConfirmedTransactionsRequest)
+    } catch (e) {
+      if (e instanceof Error) {
+        throw e;
+      } else {
+        throw new Error(`${ this.name } ${this.searchConfirmedTransactions.name} error}`);
+      }
+    }
+  }
+
+  static async searchUnconfirmedTransactions(node: string, searchConfirmedTransactionsRequest: SearchConfirmedTransactionsRequest = {}) {
+    try {
+      const transactionRoutesApi = new TransactionRoutesApi(
+        new Configuration({
+          basePath: node,
+      }));
+      return await transactionRoutesApi.searchUnconfirmedTransactions(searchConfirmedTransactionsRequest)
+    } catch (e) {
+      if (e instanceof Error) {
+        throw e;
+      } else {
+        throw new Error(`${ this.name } ${this.searchUnconfirmedTransactions.name} error}`);
+      }
+    }
+  }
+
+  static async searchPartialTransactions(node: string, searchConfirmedTransactionsRequest: SearchConfirmedTransactionsRequest = {}) {
+    try {
+      const transactionRoutesApi = new TransactionRoutesApi(
+        new Configuration({
+          basePath: node,
+      }));
+      return await transactionRoutesApi.searchPartialTransactions(searchConfirmedTransactionsRequest)
+    } catch (e) {
+      if (e instanceof Error) {
+        throw e;
+      } else {
+        throw new Error(`${ this.name } ${this.searchPartialTransactions.name} error}`);
+      }
+    }
+  }
+
+  static async announceCosignatureTransaction(node: string, requestParameters: AnnounceCosignatureTransactionRequest) {
+    try {
+      const transactionRoutesApi = new TransactionRoutesApi(
+        new Configuration({
+          basePath: node,
+      }));
+      return await transactionRoutesApi.announceCosignatureTransaction(requestParameters)
+    } catch (e) {
+      if (e instanceof Error) {
+        throw e;
+      } else {
+        throw new Error(`${ this.name } ${this.announceCosignatureTransaction.name} error}`);
+      }
+    }
+  }
+
+  static async announcePartialTransaction(node: string, requestParameters: AnnouncePartialTransactionRequest) {
+    try {
+      const transactionRoutesApi = new TransactionRoutesApi(
+        new Configuration({
+          basePath: node,
+      }));
+      return await transactionRoutesApi.announcePartialTransaction(requestParameters)
+    } catch (e) {
+      if (e instanceof Error) {
+        throw e;
+      } else {
+        throw new Error(`${ this.name } ${this.announcePartialTransaction.name} error}`);
+      }
+    }
+  }
+
+  static async announceTransaction(node: string, payload: string) {
+    try {
+      const transactionRoutesApi = new TransactionRoutesApi(
+        new Configuration({
+          basePath: node,
+      }));
+      const requestParameters: AnnounceTransactionRequest = {
+        transactionPayload: {
+          payload: payload
+        }
+      }
+      return await transactionRoutesApi.announceTransaction(requestParameters)
+    } catch (e) {
+      if (e instanceof Error) {
+        throw e;
+      } else {
+        throw new Error(`${ this.name } ${this.announceTransaction.name} error}`);
+      }
+    }
   }
 }
+

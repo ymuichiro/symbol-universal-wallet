@@ -1,3 +1,4 @@
+import { exists } from '../runtime';
 import { AccountRestrictionFlagsEnumFromJSON, AccountRestrictionFlagsEnumToJSON, } from './AccountRestrictionFlagsEnum';
 import { NetworkTypeEnumFromJSON, NetworkTypeEnumToJSON, } from './NetworkTypeEnum';
 export function instanceOfAccountMosaicRestrictionTransactionDTO(value) {
@@ -11,8 +12,6 @@ export function instanceOfAccountMosaicRestrictionTransactionDTO(value) {
     isInstance = isInstance && "maxFee" in value;
     isInstance = isInstance && "deadline" in value;
     isInstance = isInstance && "restrictionFlags" in value;
-    isInstance = isInstance && "restrictionAdditions" in value;
-    isInstance = isInstance && "restrictionDeletions" in value;
     return isInstance;
 }
 export function AccountMosaicRestrictionTransactionDTOFromJSON(json) {
@@ -32,8 +31,8 @@ export function AccountMosaicRestrictionTransactionDTOFromJSONTyped(json, ignore
         'maxFee': json['maxFee'],
         'deadline': json['deadline'],
         'restrictionFlags': AccountRestrictionFlagsEnumFromJSON(json['restrictionFlags']),
-        'restrictionAdditions': json['restrictionAdditions'],
-        'restrictionDeletions': json['restrictionDeletions'],
+        'restrictionAdditions': !exists(json, 'restrictionAdditions') ? undefined : json['restrictionAdditions'],
+        'restrictionDeletions': !exists(json, 'restrictionDeletions') ? undefined : json['restrictionDeletions'],
     };
 }
 export function AccountMosaicRestrictionTransactionDTOToJSON(value) {
