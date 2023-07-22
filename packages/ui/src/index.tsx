@@ -2,6 +2,10 @@ export * from '@tamagui/toast';
 export * from 'tamagui';
 export * from './CustomToast';
 
+// -------------------- components --------------------
+export { ConfirmedButton } from './components/ConfirmedButton';
+export { SheetBase } from './components/SheetBase';
+
 // -------------------- tabs --------------------
 export { GameInfoEvents, GameTabProps, GamesTab } from './tabs/GameTab';
 export { HistoryTab, HistoryTabProps } from './tabs/HistoryTab';

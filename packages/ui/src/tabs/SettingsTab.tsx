@@ -3,12 +3,12 @@ import { ListItem } from '@tamagui/list-item';
 import { Languages, Network, Wallet } from '@tamagui/lucide-icons';
 import { ScrollView } from '@tamagui/scroll-view';
 import { Separator } from '@tamagui/separator';
-import { Sheet } from '@tamagui/sheet';
 import { YStack } from '@tamagui/stacks';
 import { useState } from 'react';
 import { SettingsItemAccounts } from '../components/SettingsItemAccounts';
 import { SettingsItemLang } from '../components/SettingsItemLang';
 import { SettingsItemNetwork } from '../components/SettingsItemNetwork';
+import { SheetBase } from '../components/SheetBase';
 
 export interface SettingsTabProps {
   address: string;
@@ -17,7 +17,6 @@ export interface SettingsTabProps {
 
 export function SettingsTab(props: SettingsTabProps): JSX.Element {
   const [sheetElement, setSheetElement] = useState<JSX.Element | null>(null);
-  const [position, setPosition] = useState(0);
 
   const handleCloseSheet = () => {
     setSheetElement(null);
@@ -64,23 +63,11 @@ export function SettingsTab(props: SettingsTabProps): JSX.Element {
           </YGroup.Item>
         ))}
       </YGroup>
-      <Sheet
-        modal
-        open={Boolean(sheetElement)}
-        onOpenChange={handleCloseSheet}
-        snapPoints={[90]}
-        position={position}
-        onPositionChange={setPosition}
-        dismissOnSnapToBottom
-      >
-        <Sheet.Overlay />
-        <Sheet.Frame padding="$4">
-          <Sheet.Handle />
-          <ScrollView f={1} showsHorizontalScrollIndicator={false} paddingBottom={'$8'}>
-            {sheetElement}
-          </ScrollView>
-        </Sheet.Frame>
-      </Sheet>
+      <SheetBase isOpen={Boolean(sheetElement)} onOpenChange={handleCloseSheet}>
+        <ScrollView f={1} showsHorizontalScrollIndicator={false} paddingHorizontal={'$4'} paddingBottom={'$8'}>
+          {sheetElement}
+        </ScrollView>
+      </SheetBase>
     </YStack>
   );
 }

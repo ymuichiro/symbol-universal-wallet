@@ -13,7 +13,7 @@ export function GameDetailsSheet(props: GameDetailsSheetProps): JSX.Element {
   const sheetContentWidth = Dimensions.get('window').width - 32;
 
   return (
-    <YStack f={1} ai="stretch" jc="flex-start" width={sheetContentWidth} space={'$4'}>
+    <YStack f={1} width={sheetContentWidth} space={'$4'}>
       <Image source={{ uri: props.icon, height: 250, width: sheetContentWidth }} borderRadius={'$4'} />
       <H3>{props.name}</H3>
       <Button accessibilityRole="link" href={props.link} target="_blank" rel="noreferrer noopener">

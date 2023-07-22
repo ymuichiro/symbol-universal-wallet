@@ -1,4 +1,4 @@
-import { H1, Image, ListItem, ScrollView, Separator, Sheet, YGroup, YStack } from '@my/ui';
+import { H1, Image, ListItem, ScrollView, Separator, SheetBase, YGroup, YStack } from '@my/ui';
 import { useState } from 'react';
 import { GameDetailsSheet, GameDetailsSheetProps } from '../components/GameDetailsSheet';
 
@@ -11,7 +11,6 @@ export interface GameTabProps {
 }
 
 export function GamesTab(props: GameTabProps): JSX.Element {
-  const [position, setPosition] = useState(0);
   const [gameDetail, setGameDetail] = useState<GameDetailsSheetProps | null>(null);
 
   const handleOpenSheet = (e: GameDetailsSheetProps) => {
@@ -30,23 +29,11 @@ export function GamesTab(props: GameTabProps): JSX.Element {
           <GameItem key={index} {...item} onPress={handleOpenSheet} />
         ))}
       </YGroup>
-      <Sheet
-        modal
-        open={Boolean(gameDetail)}
-        onOpenChange={handleCloseSheet}
-        snapPoints={[90]}
-        position={position}
-        onPositionChange={setPosition}
-        dismissOnSnapToBottom
-      >
-        <Sheet.Overlay />
-        <Sheet.Frame ai="center" jc="center">
-          <Sheet.Handle />
-          <ScrollView showsHorizontalScrollIndicator={false} paddingBottom={'$8'}>
-            {gameDetail && <GameDetailsSheet {...gameDetail} />}
-          </ScrollView>
-        </Sheet.Frame>
-      </Sheet>
+      <SheetBase isOpen={Boolean(gameDetail)} onOpenChange={handleCloseSheet}>
+        <ScrollView ai={'center'} showsHorizontalScrollIndicator={false} paddingBottom={'$8'}>
+          {gameDetail && <GameDetailsSheet {...gameDetail} />}
+        </ScrollView>
+      </SheetBase>
     </YStack>
   );
 }
