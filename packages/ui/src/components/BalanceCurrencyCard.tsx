@@ -2,6 +2,7 @@ import { Button } from '@tamagui/button';
 import { Card } from '@tamagui/card';
 import { Image } from '@tamagui/image';
 import { H2, H4, SizableText } from '@tamagui/text';
+import { useLink } from 'solito/link';
 
 interface Props {
   networkType: 152 | 104;
@@ -13,6 +14,10 @@ interface Props {
  * view balance of a current wallet.
  */
 export function BalanceCurrencyCard(props: Props): JSX.Element {
+  const linkProps = useLink({
+    href: '/payment/send',
+  });
+
   return (
     <Card elevate bordered>
       <Card.Header padded>
@@ -22,7 +27,9 @@ export function BalanceCurrencyCard(props: Props): JSX.Element {
       </Card.Header>
       <Card.Footer>
         <Card.Footer padded>
-          <Button borderRadius="$10">Payment</Button>
+          <Button {...linkProps} borderRadius="$10">
+            Payment
+          </Button>
         </Card.Footer>
       </Card.Footer>
       <Card.Background alignItems="flex-end">

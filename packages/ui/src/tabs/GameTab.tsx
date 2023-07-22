@@ -1,39 +1,59 @@
-import { Button, H1, H3, Image, ListItem, Paragraph, ScrollView, Separator, Sheet, YGroup, YStack } from '@my/ui';
+import { H1, Image, ListItem, ScrollView, Separator, Sheet, YGroup, YStack } from '@my/ui';
 import { useState } from 'react';
-import { Dimensions } from 'react-native';
+import { GameDetailsSheet, GameDetailsSheetProps } from '../components/GameDetailsSheet';
 
-export interface GameInfo {
-  name: string;
-  subTitle: string;
-  description: string;
-  link: string;
-  icon: string;
+export interface GameInfoEvents {
+  onPress: (e: GameDetailsSheetProps) => void;
 }
 
 export interface GameTabProps {
-  items: GameInfo[];
+  items: GameDetailsSheetProps[];
 }
 
 export function GamesTab(props: GameTabProps): JSX.Element {
+  const [position, setPosition] = useState(0);
+  const [gameDetail, setGameDetail] = useState<GameDetailsSheetProps | null>(null);
+
+  const handleOpenSheet = (e: GameDetailsSheetProps) => {
+    setGameDetail(e);
+  };
+
+  const handleCloseSheet = () => {
+    setGameDetail(null);
+  };
+
   return (
     <YStack f={1} padding="$4" space={'$4'}>
       <H1>Games</H1>
       <YGroup bordered separator={<Separator />}>
         {props.items.map((item, index) => (
-          <GameItem key={index} {...item} />
+          <GameItem key={index} {...item} onPress={handleOpenSheet} />
         ))}
       </YGroup>
+      <Sheet
+        modal
+        open={Boolean(gameDetail)}
+        onOpenChange={handleCloseSheet}
+        snapPoints={[90]}
+        position={position}
+        onPositionChange={setPosition}
+        dismissOnSnapToBottom
+      >
+        <Sheet.Overlay />
+        <Sheet.Frame ai="center" jc="center">
+          <Sheet.Handle />
+          <ScrollView showsHorizontalScrollIndicator={false} paddingBottom={'$8'}>
+            {gameDetail && <GameDetailsSheet {...gameDetail} />}
+          </ScrollView>
+        </Sheet.Frame>
+      </Sheet>
     </YStack>
   );
 }
 
-function GameItem(props: GameInfo): JSX.Element {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [position, setPosition] = useState(0);
-  const sheetContentWidth = Dimensions.get('window').width - 32;
-
-  const handleOpenSheet = () => {
-    setIsOpen(true);
+function GameItem(props: GameDetailsSheetProps & GameInfoEvents): JSX.Element {
+  const handleOnPress = () => {
+    props.onPress(props);
   };
 
   return (
@@ -44,32 +64,8 @@ function GameItem(props: GameInfo): JSX.Element {
         title={props.name}
         subTitle={props.subTitle}
         icon={<Image source={{ uri: props.icon, height: 100, width: 100 }} />}
-        onPress={handleOpenSheet}
+        onPress={handleOnPress}
       />
-      <Sheet
-        modal
-        open={isOpen}
-        onOpenChange={setIsOpen}
-        snapPoints={[90]}
-        position={position}
-        onPositionChange={setPosition}
-        dismissOnSnapToBottom
-      >
-        <Sheet.Overlay />
-        <Sheet.Frame ai="center" jc="center">
-          <Sheet.Handle />
-          <ScrollView showsHorizontalScrollIndicator={false} paddingBottom={'$8'}>
-            <YStack f={1} ai="stretch" jc="flex-start" width={sheetContentWidth} space={'$4'}>
-              <Image source={{ uri: props.icon, height: 250, width: sheetContentWidth }} borderRadius={'$4'} />
-              <H3>{props.name}</H3>
-              <Button accessibilityRole="link" href={props.link} target="_blank" rel="noreferrer noopener">
-                PLAY
-              </Button>
-              <Paragraph>{props.description}</Paragraph>
-            </YStack>
-          </ScrollView>
-        </Sheet.Frame>
-      </Sheet>
     </YGroup.Item>
   );
 }
