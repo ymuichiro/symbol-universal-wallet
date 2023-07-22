@@ -1,15 +1,15 @@
 import { YGroup } from '@tamagui/group';
 import { ListItem } from '@tamagui/list-item';
-import { Languages, Network, Wallet } from '@tamagui/lucide-icons';
+import { Carrot, Languages, Network, Wallet } from '@tamagui/lucide-icons';
 import { ScrollView } from '@tamagui/scroll-view';
 import { Separator } from '@tamagui/separator';
 import { YStack } from '@tamagui/stacks';
 import { useState } from 'react';
 import { SettingsItemAccounts } from '../components/SettingsItemAccounts';
+import { SettingsItemHarvest } from '../components/SettingsItemHarvest';
 import { SettingsItemLang } from '../components/SettingsItemLang';
 import { SettingsItemNetwork } from '../components/SettingsItemNetwork';
 import { SheetBase } from '../components/SheetBase';
-
 export interface SettingsTabProps {
   address: string;
   networkType: 104 | 152;
@@ -48,6 +48,14 @@ export function SettingsTab(props: SettingsTabProps): JSX.Element {
             icon: Wallet,
             onPress: () => {
               setSheetElement(<SettingsItemAccounts sheetName="Accounts" />);
+            },
+          },
+          {
+            name: 'Harvesting',
+            subTitle: 'Receive rewards from creating new blocks',
+            icon: Carrot,
+            onPress: () => {
+              setSheetElement(<SettingsItemHarvest sheetName="Harvesting" />);
             },
           },
         ].map((item, index) => (
