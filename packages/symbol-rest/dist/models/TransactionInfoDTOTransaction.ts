@@ -463,13 +463,13 @@ export interface TransactionInfoDTOTransaction {
      * @type {Array<CosignatureDTO>}
      * @memberof TransactionInfoDTOTransaction
      */
-    cosignatures?: Array<CosignatureDTO>;
+    cosignatures: Array<CosignatureDTO>;
     /**
      * Array of transactions initiated by different accounts.
      * @type {Array<EmbeddedTransactionInfoDTO>}
      * @memberof TransactionInfoDTOTransaction
      */
-    transactions?: Array<EmbeddedTransactionInfoDTO>;
+    transactions: Array<EmbeddedTransactionInfoDTO>;
     /**
      * Mosaic identifier. If the most significant bit of byte 0 is set, a namespaceId (alias)
      * is used instead of the real mosaic identifier.
@@ -765,6 +765,8 @@ export function instanceOfTransactionInfoDTOTransaction(value: object): boolean 
     isInstance = isInstance && "startEpoch" in value;
     isInstance = isInstance && "endEpoch" in value;
     isInstance = isInstance && "transactionsHash" in value;
+    isInstance = isInstance && "cosignatures" in value;
+    isInstance = isInstance && "transactions" in value;
     isInstance = isInstance && "mosaicId" in value;
     isInstance = isInstance && "amount" in value;
     isInstance = isInstance && "duration" in value;
@@ -830,8 +832,8 @@ export function TransactionInfoDTOTransactionFromJSONTyped(json: any, ignoreDisc
         'startEpoch': json['startEpoch'],
         'endEpoch': json['endEpoch'],
         'transactionsHash': json['transactionsHash'],
-        'cosignatures': !exists(json, 'cosignatures') ? undefined : ((json['cosignatures'] as Array<any>).map(CosignatureDTOFromJSON)),
-        'transactions': !exists(json, 'transactions') ? undefined : ((json['transactions'] as Array<any>).map(EmbeddedTransactionInfoDTOFromJSON)),
+        'cosignatures': ((json['cosignatures'] as Array<any>).map(CosignatureDTOFromJSON)),
+        'transactions': ((json['transactions'] as Array<any>).map(EmbeddedTransactionInfoDTOFromJSON)),
         'mosaicId': json['mosaicId'],
         'amount': json['amount'],
         'duration': json['duration'],
@@ -900,8 +902,8 @@ export function TransactionInfoDTOTransactionToJSON(value?: TransactionInfoDTOTr
         'startEpoch': value.startEpoch,
         'endEpoch': value.endEpoch,
         'transactionsHash': value.transactionsHash,
-        'cosignatures': value.cosignatures === undefined ? undefined : ((value.cosignatures as Array<any>).map(CosignatureDTOToJSON)),
-        'transactions': value.transactions === undefined ? undefined : ((value.transactions as Array<any>).map(EmbeddedTransactionInfoDTOToJSON)),
+        'cosignatures': ((value.cosignatures as Array<any>).map(CosignatureDTOToJSON)),
+        'transactions': ((value.transactions as Array<any>).map(EmbeddedTransactionInfoDTOToJSON)),
         'mosaicId': value.mosaicId,
         'amount': value.amount,
         'duration': value.duration,

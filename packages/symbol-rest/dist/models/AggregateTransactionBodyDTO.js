@@ -1,8 +1,8 @@
-import { exists } from '../runtime';
 import { CosignatureDTOFromJSON, CosignatureDTOToJSON, } from './CosignatureDTO';
 export function instanceOfAggregateTransactionBodyDTO(value) {
     let isInstance = true;
     isInstance = isInstance && "transactionsHash" in value;
+    isInstance = isInstance && "cosignatures" in value;
     return isInstance;
 }
 export function AggregateTransactionBodyDTOFromJSON(json) {
@@ -14,7 +14,7 @@ export function AggregateTransactionBodyDTOFromJSONTyped(json, ignoreDiscriminat
     }
     return {
         'transactionsHash': json['transactionsHash'],
-        'cosignatures': !exists(json, 'cosignatures') ? undefined : (json['cosignatures'].map(CosignatureDTOFromJSON)),
+        'cosignatures': (json['cosignatures'].map(CosignatureDTOFromJSON)),
     };
 }
 export function AggregateTransactionBodyDTOToJSON(value) {
@@ -26,6 +26,6 @@ export function AggregateTransactionBodyDTOToJSON(value) {
     }
     return {
         'transactionsHash': value.transactionsHash,
-        'cosignatures': value.cosignatures === undefined ? undefined : (value.cosignatures.map(CosignatureDTOToJSON)),
+        'cosignatures': (value.cosignatures.map(CosignatureDTOToJSON)),
     };
 }

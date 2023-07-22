@@ -1,9 +1,10 @@
-import { exists } from '../runtime';
 import { CosignatureDTOFromJSON, CosignatureDTOToJSON, } from './CosignatureDTO';
 import { EmbeddedTransactionInfoDTOFromJSON, EmbeddedTransactionInfoDTOToJSON, } from './EmbeddedTransactionInfoDTO';
 export function instanceOfAggregateTransactionBodyExtendedDTO(value) {
     let isInstance = true;
     isInstance = isInstance && "transactionsHash" in value;
+    isInstance = isInstance && "cosignatures" in value;
+    isInstance = isInstance && "transactions" in value;
     return isInstance;
 }
 export function AggregateTransactionBodyExtendedDTOFromJSON(json) {
@@ -15,8 +16,8 @@ export function AggregateTransactionBodyExtendedDTOFromJSONTyped(json, ignoreDis
     }
     return {
         'transactionsHash': json['transactionsHash'],
-        'cosignatures': !exists(json, 'cosignatures') ? undefined : (json['cosignatures'].map(CosignatureDTOFromJSON)),
-        'transactions': !exists(json, 'transactions') ? undefined : (json['transactions'].map(EmbeddedTransactionInfoDTOFromJSON)),
+        'cosignatures': (json['cosignatures'].map(CosignatureDTOFromJSON)),
+        'transactions': (json['transactions'].map(EmbeddedTransactionInfoDTOFromJSON)),
     };
 }
 export function AggregateTransactionBodyExtendedDTOToJSON(value) {
@@ -28,7 +29,7 @@ export function AggregateTransactionBodyExtendedDTOToJSON(value) {
     }
     return {
         'transactionsHash': value.transactionsHash,
-        'cosignatures': value.cosignatures === undefined ? undefined : (value.cosignatures.map(CosignatureDTOToJSON)),
-        'transactions': value.transactions === undefined ? undefined : (value.transactions.map(EmbeddedTransactionInfoDTOToJSON)),
+        'cosignatures': (value.cosignatures.map(CosignatureDTOToJSON)),
+        'transactions': (value.transactions.map(EmbeddedTransactionInfoDTOToJSON)),
     };
 }
