@@ -1,4 +1,3 @@
-import { exists } from '../runtime';
 import { CosignatureDTOFromJSON, CosignatureDTOToJSON, } from './CosignatureDTO';
 import { NetworkTypeEnumFromJSON, NetworkTypeEnumToJSON, } from './NetworkTypeEnum';
 export function instanceOfAggregateTransactionDTO(value) {
@@ -12,6 +11,7 @@ export function instanceOfAggregateTransactionDTO(value) {
     isInstance = isInstance && "maxFee" in value;
     isInstance = isInstance && "deadline" in value;
     isInstance = isInstance && "transactionsHash" in value;
+    isInstance = isInstance && "cosignatures" in value;
     return isInstance;
 }
 export function AggregateTransactionDTOFromJSON(json) {
@@ -31,7 +31,7 @@ export function AggregateTransactionDTOFromJSONTyped(json, ignoreDiscriminator) 
         'maxFee': json['maxFee'],
         'deadline': json['deadline'],
         'transactionsHash': json['transactionsHash'],
-        'cosignatures': !exists(json, 'cosignatures') ? undefined : (json['cosignatures'].map(CosignatureDTOFromJSON)),
+        'cosignatures': (json['cosignatures'].map(CosignatureDTOFromJSON)),
     };
 }
 export function AggregateTransactionDTOToJSON(value) {
@@ -51,6 +51,6 @@ export function AggregateTransactionDTOToJSON(value) {
         'maxFee': value.maxFee,
         'deadline': value.deadline,
         'transactionsHash': value.transactionsHash,
-        'cosignatures': value.cosignatures === undefined ? undefined : (value.cosignatures.map(CosignatureDTOToJSON)),
+        'cosignatures': (value.cosignatures.map(CosignatureDTOToJSON)),
     };
 }

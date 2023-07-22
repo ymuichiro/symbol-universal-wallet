@@ -1,4 +1,3 @@
-import { exists } from '../runtime';
 import { CosignatureDTOFromJSON, CosignatureDTOToJSON, } from './CosignatureDTO';
 import { EmbeddedTransactionInfoDTOFromJSON, EmbeddedTransactionInfoDTOToJSON, } from './EmbeddedTransactionInfoDTO';
 import { NetworkTypeEnumFromJSON, NetworkTypeEnumToJSON, } from './NetworkTypeEnum';
@@ -13,6 +12,8 @@ export function instanceOfAggregateTransactionExtendedDTO(value) {
     isInstance = isInstance && "maxFee" in value;
     isInstance = isInstance && "deadline" in value;
     isInstance = isInstance && "transactionsHash" in value;
+    isInstance = isInstance && "cosignatures" in value;
+    isInstance = isInstance && "transactions" in value;
     return isInstance;
 }
 export function AggregateTransactionExtendedDTOFromJSON(json) {
@@ -32,8 +33,8 @@ export function AggregateTransactionExtendedDTOFromJSONTyped(json, ignoreDiscrim
         'maxFee': json['maxFee'],
         'deadline': json['deadline'],
         'transactionsHash': json['transactionsHash'],
-        'cosignatures': !exists(json, 'cosignatures') ? undefined : (json['cosignatures'].map(CosignatureDTOFromJSON)),
-        'transactions': !exists(json, 'transactions') ? undefined : (json['transactions'].map(EmbeddedTransactionInfoDTOFromJSON)),
+        'cosignatures': (json['cosignatures'].map(CosignatureDTOFromJSON)),
+        'transactions': (json['transactions'].map(EmbeddedTransactionInfoDTOFromJSON)),
     };
 }
 export function AggregateTransactionExtendedDTOToJSON(value) {
@@ -53,7 +54,7 @@ export function AggregateTransactionExtendedDTOToJSON(value) {
         'maxFee': value.maxFee,
         'deadline': value.deadline,
         'transactionsHash': value.transactionsHash,
-        'cosignatures': value.cosignatures === undefined ? undefined : (value.cosignatures.map(CosignatureDTOToJSON)),
-        'transactions': value.transactions === undefined ? undefined : (value.transactions.map(EmbeddedTransactionInfoDTOToJSON)),
+        'cosignatures': (value.cosignatures.map(CosignatureDTOToJSON)),
+        'transactions': (value.transactions.map(EmbeddedTransactionInfoDTOToJSON)),
     };
 }

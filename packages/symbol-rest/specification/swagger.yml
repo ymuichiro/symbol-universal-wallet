@@ -3470,8 +3470,8 @@ components:
           type: string
     EmbeddedTransactionBodyDTO:
       type: object
-      # required:
-      #   - transactions
+      required:
+        - transactions
       properties:
         transactions:
           type: array
@@ -3759,7 +3759,7 @@ components:
       type: object
       required:
         - transactionsHash
-        # - cosignatures
+        - cosignatures
       properties:
         transactionsHash:
           $ref: "#/components/schemas/Hash256"

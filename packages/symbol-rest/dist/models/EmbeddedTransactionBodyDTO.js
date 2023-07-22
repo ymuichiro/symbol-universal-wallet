@@ -1,7 +1,7 @@
-import { exists } from '../runtime';
 import { EmbeddedTransactionInfoDTOFromJSON, EmbeddedTransactionInfoDTOToJSON, } from './EmbeddedTransactionInfoDTO';
 export function instanceOfEmbeddedTransactionBodyDTO(value) {
     let isInstance = true;
+    isInstance = isInstance && "transactions" in value;
     return isInstance;
 }
 export function EmbeddedTransactionBodyDTOFromJSON(json) {
@@ -12,7 +12,7 @@ export function EmbeddedTransactionBodyDTOFromJSONTyped(json, ignoreDiscriminato
         return json;
     }
     return {
-        'transactions': !exists(json, 'transactions') ? undefined : (json['transactions'].map(EmbeddedTransactionInfoDTOFromJSON)),
+        'transactions': (json['transactions'].map(EmbeddedTransactionInfoDTOFromJSON)),
     };
 }
 export function EmbeddedTransactionBodyDTOToJSON(value) {
@@ -23,6 +23,6 @@ export function EmbeddedTransactionBodyDTOToJSON(value) {
         return null;
     }
     return {
-        'transactions': value.transactions === undefined ? undefined : (value.transactions.map(EmbeddedTransactionInfoDTOToJSON)),
+        'transactions': (value.transactions.map(EmbeddedTransactionInfoDTOToJSON)),
     };
 }
