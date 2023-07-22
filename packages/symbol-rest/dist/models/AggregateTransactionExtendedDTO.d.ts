@@ -11,8 +11,8 @@ export interface AggregateTransactionExtendedDTO {
     maxFee: string;
     deadline: string;
     transactionsHash: string;
-    cosignatures?: Array<CosignatureDTO>;
-    transactions?: Array<EmbeddedTransactionInfoDTO>;
+    cosignatures: Array<CosignatureDTO>;
+    transactions: Array<EmbeddedTransactionInfoDTO>;
 }
 export declare function instanceOfAggregateTransactionExtendedDTO(value: object): boolean;
 export declare function AggregateTransactionExtendedDTOFromJSON(json: any): AggregateTransactionExtendedDTO;

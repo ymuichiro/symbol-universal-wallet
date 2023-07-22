@@ -42,6 +42,9 @@ export function UserDetailScreen() {
     TransactionService.getConfirmedTransaction("https://mikun-testnet.tk:3001", "DF8AF0EA247E0801ED6C0D778D729DC03362BE1BF581C3947136121B7C92E7A9").then((result) => {
       console.log(result);
     })
+    TransactionService.searchConfirmedTransactions("https://mikun-testnet.tk:3001", {signerPublicKey: "13B00FBB13C7644E13BD786F0EA4F97820022A2606759793A5D3525A03F92A2F"}).then((result) => {
+      console.log(result);
+    });
   }, [id]);
 
   useEffect(() => {

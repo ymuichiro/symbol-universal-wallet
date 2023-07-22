@@ -24,8 +24,8 @@ export interface TransactionInfoDTOTransaction {
     startEpoch: number;
     endEpoch: number;
     transactionsHash: string;
-    cosignatures?: Array<CosignatureDTO>;
-    transactions?: Array<EmbeddedTransactionInfoDTO>;
+    cosignatures: Array<CosignatureDTO>;
+    transactions: Array<EmbeddedTransactionInfoDTO>;
     mosaicId: string;
     amount: string;
     duration: string;
