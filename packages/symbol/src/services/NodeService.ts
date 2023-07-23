@@ -1,12 +1,12 @@
-import { NodeInfoDTO, NodeRoutesApi, Configuration } from 'symbol-rest/dist/';
+import { Configuration, NodeInfoDTO, NodeRoutesApi } from 'symbol-rest';
 
 export default class AccountService {
-  static async getNodeInfo (node: string): Promise<NodeInfoDTO> {
+  static async getNodeInfo(node: string): Promise<NodeInfoDTO> {
     const config = new Configuration({
       basePath: node,
     });
-    const nodeRoutesApi = new NodeRoutesApi(config);  
-    const nodeInfo = await nodeRoutesApi.getNodeInfo()
+    const nodeRoutesApi = new NodeRoutesApi(config);
+    const nodeInfo = await nodeRoutesApi.getNodeInfo();
     return nodeInfo;
   }
 }
