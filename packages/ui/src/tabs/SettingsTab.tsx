@@ -1,11 +1,10 @@
 import { YGroup } from '@tamagui/group';
 import { ListItem } from '@tamagui/list-item';
-import { Carrot, Languages, Network, Wallet } from '@tamagui/lucide-icons';
+import { Carrot, Languages, Network } from '@tamagui/lucide-icons';
 import { ScrollView } from '@tamagui/scroll-view';
 import { Separator } from '@tamagui/separator';
 import { YStack } from '@tamagui/stacks';
 import { useState } from 'react';
-import { SettingsItemAccounts } from '../components/SettingsItemAccounts';
 import { SettingsItemHarvest } from '../components/SettingsItemHarvest';
 import { SettingsItemLang } from '../components/SettingsItemLang';
 import { SettingsItemNetwork } from '../components/SettingsItemNetwork';
@@ -40,14 +39,6 @@ export function SettingsTab(props: SettingsTabProps): JSX.Element {
             icon: Network,
             onPress: () => {
               setSheetElement(<SettingsItemNetwork sheetName="Network" />);
-            },
-          },
-          {
-            name: 'Accounts',
-            subTitle: 'Change the current account',
-            icon: Wallet,
-            onPress: () => {
-              setSheetElement(<SettingsItemAccounts sheetName="Accounts" />);
             },
           },
           {

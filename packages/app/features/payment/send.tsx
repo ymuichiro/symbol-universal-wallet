@@ -108,7 +108,7 @@ export function PaymentSendScreen(): JSX.Element {
         </Label>
         <YStack space={'$4'}>
           {mosaic.map((item, index) => (
-            <YStack key="index" space="$2">
+            <YStack key={index} space="$2">
               <XStack space={'$2'}>
                 <Input
                   id="mosaic"
