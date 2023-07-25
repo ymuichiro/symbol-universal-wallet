@@ -5,20 +5,17 @@ import {
   Label,
   Paragraph,
   ScrollView,
-  SheetBase,
   SizableText,
   Switch,
   XStack,
   YStack,
 } from '@my/ui';
-import { AnnounceResultSheet } from '@my/ui/src/components/AnnounceResultSheet';
 import { ArrowLeft, AtSign, Database, MinusCircle, Plus } from '@tamagui/lucide-icons';
-import CheckIcon from 'app/assets/icons/icon-check.png';
-import FailIcon from 'app/assets/icons/icon-fail.png';
 import { TextService } from 'app/services/text-service';
 import React, { useEffect, useState } from 'react';
 import { Dimensions } from 'react-native';
 import { useLink } from 'solito/link';
+import { useRouter } from 'solito/router';
 
 export function PaymentSendScreen(): JSX.Element {
   const [height, setHeight] = useState<number>(Dimensions.get('window').height);
@@ -26,7 +23,7 @@ export function PaymentSendScreen(): JSX.Element {
   const [mosaic, setMosaic] = useState<{ id: string; amount: number }[]>([]);
   const [message, setMessage] = useState<string>('');
   const [isEncrypt, setIsEncrypt] = useState<boolean>(false);
-  const [sendResult, setSentResult] = useState<{ title: string; image: string } | null>(null);
+  const router = useRouter();
   const linkProps = useLink({
     href: '/',
   });
@@ -62,19 +59,12 @@ export function PaymentSendScreen(): JSX.Element {
     setMosaic(_mosaic);
   };
 
-  const handleCloseResultSheet = () => {
-    setSentResult(null);
-  };
-
   const handlePressModalAccept = () => {
-    try {
-      // トランザクション送信処理
-      // 成功したら sheet modal を表示
-      // 失敗したら sheet modal を表示
-      setSentResult({ title: 'Successfully', image: CheckIcon.src });
-    } catch (err) {
-      setSentResult({ title: 'Failure', image: FailIcon.src });
-    }
+    // 送信用画面へ転送
+    router.push({
+      query: { address, mosaic: JSON.stringify(mosaic), message, isEncrypt: isEncrypt ? 'true' : 'false' },
+      pathname: '/payment/action/wait',
+    });
   };
 
   useEffect(() => {
@@ -82,7 +72,6 @@ export function PaymentSendScreen(): JSX.Element {
       setHeight(e.window.height);
     });
     return () => {
-      setSentResult(null);
       _event.remove();
     };
   }, []);
@@ -150,17 +139,16 @@ export function PaymentSendScreen(): JSX.Element {
         <YStack justifyContent="center" padding="$4">
           <ConfirmedButton
             button={{ title: 'SUBMIT' }}
-            content={{ title: 'To be Confirm?', onPressAccept: handlePressModalAccept }}
+            content={{
+              title: 'To be Confirm?',
+              description: 'If all is well, we will begin signing.',
+              onPressAccept: handlePressModalAccept,
+            }}
           >
             <CheckModalInner address={address} mosaic={mosaic} message={message} isEncrypt={isEncrypt} />
           </ConfirmedButton>
         </YStack>
       </YStack>
-      <SheetBase isOpen={Boolean(sendResult)} onOpenChange={handleCloseResultSheet}>
-        <ScrollView ai={'center'} showsHorizontalScrollIndicator={false} paddingBottom={'$8'}>
-          {sendResult && <AnnounceResultSheet image={sendResult.image} title={sendResult.title} />}
-        </ScrollView>
-      </SheetBase>
     </ScrollView>
   );
 }

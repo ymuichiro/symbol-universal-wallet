@@ -11,6 +11,7 @@ interface ConfirmedButtonProps {
   };
   content?: {
     title?: string;
+    description?: string;
     maxWidth?: number;
     onPressAccept?: () => void;
   };
@@ -63,10 +64,11 @@ export function ConfirmedButton(props: ConfirmedButtonProps): JSX.Element {
           width={'95%'}
           maxWidth={props.content?.maxWidth || 500}
         >
+          <AlertDialog.Title>{props.content?.title}</AlertDialog.Title>
+          <AlertDialog.Description>{props.content?.description}</AlertDialog.Description>
           <ScrollView showsVerticalScrollIndicator={false} style={{ maxHeight: height - 100 }}>
             <YStack space>
-              <AlertDialog.Title>{props.content?.title}</AlertDialog.Title>
-              <AlertDialog.Description>{props.children}</AlertDialog.Description>
+              {props.children}
               <XStack space="$3" justifyContent="flex-end">
                 <AlertDialog.Cancel asChild>
                   <Button>Cancel</Button>
