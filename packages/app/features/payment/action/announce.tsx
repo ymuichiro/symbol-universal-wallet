@@ -4,6 +4,7 @@ import { Button } from '@tamagui/button';
 import { YStack } from '@tamagui/stacks';
 import CheckIcon from 'app/assets/icons/icon-check.png';
 import { useEffect, useState } from 'react';
+import { TransactionService } from 'symbol';
 
 type Status = 'yet' | 'announce' | 'success' | 'failer';
 
@@ -16,15 +17,22 @@ export function PaymentActionAnnounce(props: PaymentActionAnnounceProps): JSX.El
   const [sendResult, setSentResult] = useState<{ title: string; image: string } | null>(null);
 
   useEffect(() => {
-    console.log(props);
-
     // ここに アナウンス処理。完了したら setIsStatus('success') または setIsStatus('failer')
     try {
       // トランザクション送信処理
-      // 成功したら sheet modal を表示
-      // 失敗したら sheet modal を表示
-      setIsStatus('announce');
-      setSentResult({ title: 'Successfully', image: CheckIcon.src });
+      // ノードは保存してるどこかから取得する
+      TransactionService.announceTransaction("https://mikun-testnet.tk:3001", props.payload).then((result)=>{
+        if (result.error) {
+          // 失敗したら sheet modal を表示
+          setIsStatus('failer');
+          setSentResult({ title: 'Error', image: CheckIcon.src });
+          console.error(result.error);
+        } else {
+          // 成功したら sheet modal を表示
+          setIsStatus('announce');
+          setSentResult({ title: 'Successfully', image: CheckIcon.src });
+        }
+      });
     } catch (err) {
       setSentResult(null);
     }
