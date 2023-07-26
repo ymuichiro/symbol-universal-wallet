@@ -1,13 +1,16 @@
 import {
   AnnounceCosignatureTransactionRequest,
   AnnouncePartialTransactionRequest,
-  AnnounceTransactionRequest,
   Configuration,
   SearchConfirmedTransactionsRequest,
   TransactionRoutesApi,
 } from 'symbol-rest';
 
 export default class TransactionService {
+  // ここは環境変数から取得するようにする
+  static BACKEND = "http://localhost:3000";
+  // static BACKEND = "http://192.168.10.4:3000";
+
   constructor() {}
 
   static async getConfirmedTransaction(node: string, transactionId: string) {
@@ -169,17 +172,9 @@ export default class TransactionService {
 
   static async announceTransaction(node: string, payload: string) {
     try {
-      const transactionRoutesApi = new TransactionRoutesApi(
-        new Configuration({
-          basePath: node,
-        })
-      );
-      const requestParameters: AnnounceTransactionRequest = {
-        transactionPayload: {
-          payload: payload,
-        },
-      };
-      return await transactionRoutesApi.announceTransaction(requestParameters);
+      const url = new URL(`${this.BACKEND}/api/transactions/announce?node=${node}&payload=${payload}`);
+      const res = await fetch(url.toString());
+      return res.json();
     } catch (e) {
       if (e instanceof Error) {
         throw e;

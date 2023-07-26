@@ -27,7 +27,7 @@ export default function PaymentSendPage() {
       <Head>
         <title>Announce</title>
       </Head>
-      {isLoaded && <AnnounceScreen payload={router.query.payload as string} />}
+      {isLoaded && <AnnounceScreen payload={router.query.signed_payload as string} />}
     </>
   );
 }
