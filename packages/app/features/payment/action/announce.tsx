@@ -12,7 +12,7 @@ interface PaymentActionAnnounceProps {
   payload: string;
 }
 
-// ノードは保存してるどこかから取得する
+// nodeUrlはBrowserStorageから取得する
 const node = "https://mikun-testnet.tk:3001";
 
 export function PaymentActionAnnounce(props: PaymentActionAnnounceProps): JSX.Element {

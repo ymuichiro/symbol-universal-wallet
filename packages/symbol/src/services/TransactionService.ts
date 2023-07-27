@@ -9,7 +9,7 @@ import {
 export default class TransactionService {
   // ここは環境変数から取得するようにする
   static BACKEND = "http://localhost:3000";
-  // static BACKEND = "http://192.168.10.4:3000";
+  //static BACKEND = "http://192.168.10.4:3000";
 
   constructor() {}
 

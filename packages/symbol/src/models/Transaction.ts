@@ -23,8 +23,12 @@ export default class Transaction {
       return undefined;
     } else {
       setTransactionByPayload(this.payload);
-      const signedTransaction = await requestSign();
-      return signedTransaction.payload;
+      try {
+        const signedTransaction = await requestSign();
+        return signedTransaction.payload;
+      } catch (error: any) {
+        console.error(error.message);
+      }
     }
   }
 }
