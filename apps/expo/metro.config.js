@@ -16,7 +16,8 @@ config.resolver.nodeModulesPaths = [
   path.resolve(workspaceRoot, 'node_modules'),
 ];
 
-config.transformer = { ...config.transformer, unstable_allowRequireContext: true };
+config.resolver.config.transformer = { ...config.transformer, unstable_allowRequireContext: true };
 config.transformer.minifierPath = require.resolve('metro-minify-terser');
+config.resolve.alias['lottie-react-native'] = 'react-native-web-lottie';
 
 module.exports = config;

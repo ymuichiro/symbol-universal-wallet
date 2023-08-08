@@ -80,6 +80,13 @@ module.exports = function () {
       scrollRestoration: true,
       legacyBrowsers: false,
     },
+    webpack: (config) => {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        'lottie-react-native': 'react-native-web-lottie',
+      };
+      return config;
+    },
   };
 
   for (const plugin of plugins) {
