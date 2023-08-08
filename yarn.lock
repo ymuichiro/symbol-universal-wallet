@@ -13699,6 +13699,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lottie-react-native@npm:^6.0.1":
+  version: 6.0.1
+  resolution: "lottie-react-native@npm:6.0.1"
+  peerDependencies:
+    react: "*"
+    react-native: ">=0.46"
+    react-native-windows: ">=0.63.x"
+  peerDependenciesMeta:
+    react-native-windows:
+      optional: true
+  checksum: cf2aacd5a95c82be3e9ed37604e8e54fa09c4e8464a43170dd982c56547dfc550c738dc28be05b2a943ebb35753eb46ac8d44f57d3d2b2d4f7e86d7828e7381e
+  languageName: node
+  linkType: hard
+
+"lottie-web@npm:^5.7.1":
+  version: 5.12.2
+  resolution: "lottie-web@npm:5.12.2"
+  checksum: af5bc3bc405fd760de8b17a36158d5a8c3e8c586c711d0c63681ddf056b65bc6b54ea36b1fcad782fb02dbe12e696a40e0ba72daf41b8f10ab5b5d1113793636
+  languageName: node
+  linkType: hard
+
 "lower-case@npm:^2.0.2":
   version: 2.0.2
   resolution: "lower-case@npm:2.0.2"
@@ -15292,8 +15313,10 @@ __metadata:
     "@zxing/library": ^0.20.0
     check-dependency-version-consistency: ^3.0.3
     eslint: ^8.21.0
+    lottie-react-native: ^6.0.1
     node-gyp: ^9.3.1
     prettier: ^2.7.1
+    react-native-web-lottie: ^1.4.4
     rimraf: ^5.0.1
     sharp: ^0.32.4
     sss-module: ^1.0.4
@@ -17152,6 +17175,17 @@ __metadata:
     react: "*"
     react-dom: "*"
   checksum: 7cba778001a1028f8dfb759586f1bc80c5473d3b91445e45050edb2845a2c60f4797ffb3850c6e660138fb6be0a6238b9d708aa70671c9acd3f79af3567f71cc
+  languageName: node
+  linkType: hard
+
+"react-native-web-lottie@npm:^1.4.4":
+  version: 1.4.4
+  resolution: "react-native-web-lottie@npm:1.4.4"
+  dependencies:
+    lottie-web: ^5.7.1
+  peerDependencies:
+    react-native-web: "*"
+  checksum: a9a55c5f0af2b16a278f5a6fd78067a6c4556dd8200747f958a896f5e2635a21b418902837b549f1338bef34abf942ff24aa50fc7cce88b96095cc8aa6a6bb29
   languageName: node
   linkType: hard
 
