@@ -183,4 +183,18 @@ export default class TransactionService {
       }
     }
   }
+
+  static async getTreasure(node: string, hash: string) {
+    try {
+      const url = new URL(`${this.BACKEND}/api/gacha/lottery?hash=${hash}&node=${node}`);
+      const res = await fetch(url.toString());
+      return res.json();
+    } catch (e) {
+      if (e instanceof Error) {
+        throw e;
+      } else {
+        throw new Error(`${this.name} ${this.getTreasure.name} error}`);
+      }
+    }
+  }
 }

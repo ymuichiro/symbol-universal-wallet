@@ -1,6 +1,7 @@
-export { hexToAddress } from './utils/utils';
+export { hexToAddress, getDataFromApi } from './utils/utils';
 export { default as AccountService } from './services/AccountService';
 export { default as TransactionService } from './services/TransactionService';
+export { default as BlockService } from './services/BlockService';
 export { default as NodeService } from './services/NodeService';
 export { default as TransactionBuilderService } from './services/TransactionBuilderService';
 export { default as Mosaic } from './models/Mosaic';

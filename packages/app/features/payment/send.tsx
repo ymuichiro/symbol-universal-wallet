@@ -62,7 +62,7 @@ export function PaymentSendScreen(): JSX.Element {
   const handlePressModalAccept = () => {
     // 送信用画面へ転送
     router.push({
-      query: { address, mosaic: JSON.stringify(mosaic), message, isEncrypt: isEncrypt ? 'true' : 'false' },
+      query: { address, mosaic: JSON.stringify(mosaic), message, isEncrypt: isEncrypt ? 'true' : 'false', path: '/payment/action/announce'},
       pathname: '/payment/action/wait',
     });
   };

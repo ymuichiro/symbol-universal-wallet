@@ -8,6 +8,7 @@ interface PaymentActionWaitProps {
   mosaic: { id: string; amount: BigInt }[];
   message: string;
   isEncrypt: boolean;
+  path: string;
 }
 
 export function PaymentActionWait(props: PaymentActionWaitProps): JSX.Element {
@@ -33,7 +34,7 @@ export function PaymentActionWait(props: PaymentActionWaitProps): JSX.Element {
         if (signed_payload !== undefined) {
           router.push({
             query: { signed_payload },
-            pathname: '/payment/action/announce',
+            pathname: props.path,
           });
         }
       } catch (error) {

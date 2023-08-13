@@ -27,8 +27,12 @@ export default function PaymentSendPage() {
       </Head>
       {isLoaded && (
         <WaitScreen
+          path={router.query.path as string}
           address={router.query.address as string}
-          mosaic={JSON.parse(router.query.mosaic as string)}
+          mosaic={
+            router.query.mosaic === undefined ? undefined :
+            JSON.parse(router.query.mosaic as string)
+          }
           message={router.query.message as string}
           isEncrypt={router.query.isEncrypt === 'true' ? true : false}
         />

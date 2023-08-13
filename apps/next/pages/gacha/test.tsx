@@ -1,7 +1,7 @@
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
 
-const TestScreen = dynamic(() => import('app/features/home/test').then((e) => e.TestScreen), {
+const TestScreen = dynamic(() => import('app/features/gacha/test').then((e) => e.TestScreen), {
   ssr: false,
   loading: () => <div>loading...</div>,
 });
