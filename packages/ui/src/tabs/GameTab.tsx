@@ -1,4 +1,4 @@
-import { H1, Image, ListItem, ScrollView, Separator, SheetBase, YGroup, YStack } from '@my/ui';
+import { H1, Image, ListItem, ScrollView, Separator, SheetBase, YGroup, YStack } from '../index';
 import { useState } from 'react';
 import { GameDetailsSheet, GameDetailsSheetProps } from '../components/GameDetailsSheet';
 

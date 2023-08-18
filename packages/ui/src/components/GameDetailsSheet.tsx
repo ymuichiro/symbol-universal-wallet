@@ -1,4 +1,4 @@
-import { Button, H3, Image, Paragraph, YStack } from '@my/ui';
+import { Button, H3, Image, Paragraph, YStack } from '../index';
 import { Dimensions } from 'react-native';
 
 export interface GameDetailsSheetProps {

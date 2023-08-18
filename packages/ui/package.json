@@ -23,6 +23,7 @@
     "@tamagui/shorthands": "latest",
     "@tamagui/themes": "latest",
     "@tamagui/toast": "latest",
+    "symbol": "0.0.1",
     "tamagui": "latest"
   },
   "devDependencies": {

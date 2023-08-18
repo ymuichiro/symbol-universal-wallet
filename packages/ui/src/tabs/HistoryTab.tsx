@@ -1,4 +1,4 @@
-import { H1, ListItem, Separator, SizableText, Tabs, YStack } from '@my/ui';
+import { H1, ListItem, Separator, SizableText, Tabs, YStack } from '../index';
 import { ChevronRight, History } from '@tamagui/lucide-icons';
 
 export interface HistoryTabProps {

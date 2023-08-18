@@ -1,4 +1,4 @@
-import { YStack } from '@my/ui';
+import { YStack } from '../index';
 import { useState } from 'react';
 import { BalanceCurrencyCard } from '../components/BalanceCurrencyCard';
 import { BalanceMosaicsCard } from '../components/BalanceMosaicsCard';

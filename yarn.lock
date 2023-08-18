@@ -3219,6 +3219,7 @@ __metadata:
     "@tamagui/shorthands": latest
     "@tamagui/themes": latest
     "@tamagui/toast": latest
+    symbol: 0.0.1
     tamagui: latest
   languageName: unknown
   linkType: soft
@@ -15287,6 +15288,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "next-app@workspace:apps/next"
   dependencies:
+    "@my/ui": 0.0.1
     "@tamagui/next-plugin": latest
     "@tamagui/next-theme": latest
     "@types/node": ^18.6.4
@@ -15299,6 +15301,7 @@ __metadata:
     react-native: ^0.71.4
     react-native-web: ^0.18.12
     react-native-web-lite: latest
+    symbol: 0.0.1
     vercel: latest
   languageName: unknown
   linkType: soft
@@ -19153,7 +19156,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"symbol@workspace:packages/symbol":
+"symbol@0.0.1, symbol@workspace:packages/symbol":
   version: 0.0.0-use.local
   resolution: "symbol@workspace:packages/symbol"
   dependencies:
