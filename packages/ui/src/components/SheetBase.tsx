@@ -23,7 +23,7 @@ export function SheetBase(props: SheetBaseProps): JSX.Element {
     >
       <Sheet.Overlay />
       <Sheet.Frame>
-        <Sheet.Handle />
+        <Sheet.Handle backgroundColor={'#FFF'} />
         <ScrollView showsHorizontalScrollIndicator={false} paddingBottom={'$8'}>
           {props.children}
         </ScrollView>
