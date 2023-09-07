@@ -17,7 +17,7 @@ export default class OneTouchHarvestingTransaction extends Transaction{
     this.payload = await TransactionBuilderService.buildOneTouchHarvestingTransaction(this);
   }
 
-  public override async sign(): Promise<string | undefined>{
+  public override async sign(): Promise<string>{
     return await super.sign()
   }
 }

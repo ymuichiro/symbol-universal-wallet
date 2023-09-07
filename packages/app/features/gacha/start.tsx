@@ -11,40 +11,139 @@ import {
   View,
   XStack,
   YStack,
+  AlertDialog,
 } from '@my/ui';
 import EggAnimation from 'app/assets/jsons/egg-animation.json';
 import Lottie from 'lottie-react-native';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'solito/router';
+import { 
+  AccountService, 
+  MonsterService, 
+  TransactionService, 
+  CommonMonsters, 
+  UncommonMonsters, 
+  RareMonsters, 
+  EpicMonsters, 
+  LegendaryMonsters,
+  MonsterRarity, 
+  isMobileDevice,
+  TransferTransaction, 
+  NetworkType,  
+  Mosaic} from 'symbol';
+import { getActivePublicKey } from 'sss-module';
 
 interface MosaicSelectProps {
   name: string;
   value: string;
 }
 
+// nodeUrlはBrowserStorageから取得する
+const node = 'https://mikun-testnet.tk:3001';
+const BACKEND = TransactionService.BACKEND;
+
 /**
  * ガチャアプリの起動、メッセージ入力の画面
  */
 export function CapselToyStart(): JSX.Element {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpenAlertDialogNothingPuclicKey, setIsOpenAlertDialogNothingPuclicKey] = useState<boolean>(false);
+  const [publicKey, setPublicKey] = useState<string>('');
+  const [ITEMS, setItems] = useState<MosaicSelectProps[]>([{ name: 'none', value: 'none' }]);
   const router = useRouter();
   const address = process.env.NEXT_PUBLIC_SYSTEM_ADDRESS;
-  const ITEMS: MosaicSelectProps[] = [
-    { name: 'symbol.xym', value: '72C0212E67A08BCE' },
-    { name: 'none', value: 'none' },
-  ];
+  
+  useEffect(() => {
+    const doAsyncTask = async () => {
+      // モバイルでなければSSSから公開鍵を取得する
+      if(!isMobileDevice()) {
+        const pubKey = getActivePublicKey();
+        setPublicKey(pubKey);
+      }
+    };
+    // SSSは起動時に初期化されるので、1秒待ってから公開鍵を取得する
+    setTimeout(()=>{
+      doAsyncTask()
+    }, 1000);
+  }, []);
 
-  const handleSend = (message: string, mosaicId: string | undefined) => {
-    const mosaic = mosaicId ? JSON.stringify([{ id: mosaicId, amount: 1 }]) : undefined;
-    router.push({
-      query: { address, mosaic, message, path: '/gacha/getTreasure' },
-      pathname: '/payment/action/wait',
+  // ゲームスタートボタン押下時の処理
+  const hundleGameStart = async () => {
+    if(publicKey == "") {
+      // 公開鍵が取得できなかった場合はアラートを表示する
+      setIsOpenAlertDialogNothingPuclicKey(true);
+      return;
+    }
+    
+    // 所有モザイクからモンスターを保有していればセレクトボックスに追加する
+    const accountService = new AccountService(publicKey);
+    const monsterService = new MonsterService(CommonMonsters, UncommonMonsters, RareMonsters, EpicMonsters, LegendaryMonsters);
+    accountService.getAccountInfo(node).then((accountInfo) => {
+      accountInfo.account.mosaics.forEach((mosaic) => {
+        const monster = monsterService.getMonsterName(mosaic.id);
+        if(monster != undefined) {
+          setItems((prev) => [...prev, { name: monster.name + " : " + getEnumKeyByEnumValue(MonsterRarity, monster.rarity), value: mosaic.id }]);
+        }
+        setIsOpen(!isOpen);
+      })
     });
+  };
+
+  // セットした情報によりトランザクションを構築する
+  const handleSend = async (message: string | undefined, mosaicId1: string | undefined, mosaicId2: string | undefined) => {
+    let mosaics: Mosaic[] = [];
+
+    if(mosaicId1 && mosaicId2 && mosaicId1 == mosaicId2) {
+      mosaics.push({ id: mosaicId1, amount: BigInt(2)});
+    } else {
+      if(mosaicId1){
+        mosaics.push({ id: mosaicId1, amount: BigInt(1)});
+      }
+      if(mosaicId2){
+        mosaics.push({ id: mosaicId2, amount: BigInt(1) });
+      }
+    }
+
+    const transferTransaction = new TransferTransaction(
+      NetworkType.TESTNET,
+      address!,
+      undefined,
+      undefined,
+      mosaics,
+      message,
+      false,
+    );
+
+    try {
+      await transferTransaction.build();
+      const signed_payload = await transferTransaction.sign();
+
+      // ゲットモンスターページへ遷移する、aLiceの場合はsigned_payloadにaLiceの値をセットする
+      router.push({
+        query: { signed_payload },
+        pathname: '/gacha/get-monster',
+      });
+    } catch (error) {
+      // エラーハンドリング
+      console.error('エラーが発生しました:', error);
+    }
     setIsOpen(false);
+  };
+
+  const handlePublicKeyChange = (event: any) => {
+    setPublicKey(event.target.value);
   };
 
   return (
     <YStack padding="$4" f={1}>
+      <AlertDialogMonster 
+        isOpen={isOpenAlertDialogNothingPuclicKey} 
+        hasAccept={true} 
+        hasCancel={false} 
+        title='Alert' 
+        description='Please input you public key.' 
+        acceptText='OK'
+        onAccept={()=>setIsOpenAlertDialogNothingPuclicKey(false)}></AlertDialogMonster>
       <H2
         style={{
           color: '#ACB6E5',
@@ -62,23 +161,32 @@ export function CapselToyStart(): JSX.Element {
         XYM Monster is a game where you can get a random XYM Monster by inscribing today's events on the blockchain.
       </Paragraph>
       <Lottie source={EggAnimation} autoPlay loop style={{ height: 500 }} />
-      <XStack jc="center">
-        <Button
-          themeShallow
-          fontWeight="bold"
-          paddingLeft={'$8'}
-          paddingRight={'$8'}
-          onPress={() => setIsOpen(!isOpen)}
-        >
-          GAME START !!
-        </Button>
-      </XStack>
+      <YStack space={'$4'} width={'100%'}>
+        <XStack jc="center">
+          <Paragraph>Input your publicKey.</Paragraph>
+        </XStack>
+        <XStack jc="center" space={'$3'}>
+          <Input placeholder="PublicKey" value={publicKey} width={'80%'} onChange={handlePublicKeyChange}/>
+          {isMobileDevice() && <Button onPress={()=>{window.location.href = "alice://sign?type=request_pubkey";}}>aLice</Button>}
+        </XStack>
+        <XStack jc="center">
+          <Button
+            themeShallow
+            fontWeight="bold"
+            paddingLeft={'$8'}
+            paddingRight={'$8'}
+            onPress={hundleGameStart}
+          >
+            GAME START !!
+          </Button>
+        </XStack>
+      </YStack>
       <SheetBase isOpen={isOpen} onOpenChange={setIsOpen}>
         <ReportModal
           items={ITEMS}
           onSubmit={(e) => {
             console.log(e.text);
-            handleSend(e.text, e.mosaicId);
+            handleSend(e.text, e.mosaicId1, e.mosaicId2);
           }}
         />
       </SheetBase>
@@ -86,19 +194,32 @@ export function CapselToyStart(): JSX.Element {
   );
 }
 
+function getEnumKeyByEnumValue(enumType: any, enumValue: any): string | undefined {
+  const keys = Object.keys(enumType).filter((key) => enumType[key] === enumValue);
+  return keys.length > 0 ? keys[0] : undefined;
+}
+
 interface ReportModalProps {
-  onSubmit: (e: { text: string; mosaicId?: string }) => void;
+  onSubmit: (e: { text?: string; mosaicId1?: string;  mosaicId2?: string }) => void;
   items: MosaicSelectProps[];
 }
 
 function ReportModal(props: ReportModalProps): JSX.Element {
   const [title, setTitle] = useState<string>('');
   const [message, setMessage] = useState<string>('');
-  const [mosaicId, setMosaicId] = useState<string>(props.items[0]?.value ?? 'none');
+  const [mosaicId1, setMosaicId1] = useState<string>(props.items[0]?.value ?? 'none');
+  const [mosaicId2, setMosaicId2] = useState<string>(props.items[0]?.value ?? 'none');
 
   const handleSubmit = () => {
-    const text = `${title}\n----------\n【報告内容】${message}`;
-    props.onSubmit({ text, mosaicId: mosaicId === 'none' ? undefined : mosaicId });
+    let text: string | undefined = "";
+    if(title != "") {
+      text += `${title}\n----------\n`;
+    }
+    if(message != "") {
+      text += `【報告内容】${message}`;
+    }
+    text = text == "" ? undefined : text;
+    props.onSubmit({ text, mosaicId1: mosaicId1 === 'none' ? undefined : mosaicId1, mosaicId2: mosaicId2 === 'none' ? undefined : mosaicId2 });
   };
 
   return (
@@ -123,7 +244,24 @@ function ReportModal(props: ReportModalProps): JSX.Element {
         </View>
         <View>
           <Label>Token</Label>
-          <SelectBase items={props.items} select={{ id: 'xymMon', value: mosaicId, onValueChange: setMosaicId }} />
+          <YStack space={'$3'} f={1}>
+          <select value={mosaicId1} onChange={(e) => setMosaicId1(e.target.value)}>
+            {props.items.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.name}
+              </option>
+            ))}
+          </select>
+          <select value={mosaicId2} onChange={(e) => setMosaicId2(e.target.value)}>
+            {props.items.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.name}
+              </option>
+            ))}
+          </select>
+            {/* <SelectBase items={props.items} select={{ id: 'xymMon', value: mosaicId1, onValueChange: setMosaicId1 }}/>
+            <SelectBase items={props.items} select={{ id: 'xymMon', value: mosaicId2, onValueChange: setMosaicId2 }} /> */}
+          </YStack>
         </View>
         <Button themeInverse onPress={handleSubmit} fontWeight={'bold'} marginTop={'$4'}>
           SUBMIT
@@ -131,4 +269,67 @@ function ReportModal(props: ReportModalProps): JSX.Element {
       </YStack>
     </ScrollView>
   );
+}
+
+interface AlertDialogProps {
+  isOpen: boolean;
+  title: string;
+  description: string;
+  onOpenChange?: () => void;
+  hasAccept?: boolean;
+  hasCancel?: boolean;
+  acceptText?: string;
+  cancelText?: string;
+  onAccept?: () => void;
+  onCancel?: () => void;
+}
+export function AlertDialogMonster(alertDialogProps: AlertDialogProps) {
+  return (
+    <AlertDialog native open={alertDialogProps.isOpen} onOpenChange={alertDialogProps.onOpenChange}>
+      <AlertDialog.Portal>
+        <AlertDialog.Overlay
+          key="overlay"
+          animation="quick"
+          opacity={0.5}
+          enterStyle={{ opacity: 0 }}
+          exitStyle={{ opacity: 0 }}
+        />
+        <AlertDialog.Content
+          bordered
+          elevate
+          key="content"
+          animation={[
+            'quick',
+            {
+              opacity: {
+                overshootClamping: true,
+              },
+            },
+          ]}
+          enterStyle={{ x: 0, y: -20, opacity: 0, scale: 0.9 }}
+          exitStyle={{ x: 0, y: 10, opacity: 0, scale: 0.95 }}
+          x={0}
+          scale={1}
+          opacity={1}
+          y={0}
+        >
+          <YStack space>
+            <AlertDialog.Title>{alertDialogProps.title}</AlertDialog.Title>
+            <AlertDialog.Description>
+              {alertDialogProps.description}
+            </AlertDialog.Description>
+
+            <XStack space="$3" justifyContent="flex-end">
+              {alertDialogProps.hasCancel && <AlertDialog.Cancel asChild>
+                <Button onPress={alertDialogProps.onCancel}>{alertDialogProps.cancelText}</Button>
+              </AlertDialog.Cancel>}
+              {alertDialogProps.hasAccept && <AlertDialog.Action asChild>
+                <Button theme="active" onPress={alertDialogProps.onAccept}>{alertDialogProps.acceptText}</Button>
+              </AlertDialog.Action>}
+            </XStack>
+          </YStack>
+        </AlertDialog.Content>
+      </AlertDialog.Portal>
+    </AlertDialog>
+  )
 }

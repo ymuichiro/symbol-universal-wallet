@@ -5,7 +5,7 @@ import { TransferTransaction, NetworkType } from 'symbol';
 
 interface PaymentActionWaitProps {
   address: string;
-  mosaic: { id: string; amount: BigInt }[];
+  mosaics: { id: string; amount: BigInt }[];
   message: string;
   isEncrypt: boolean;
   path: string;
@@ -21,7 +21,7 @@ export function PaymentActionWait(props: PaymentActionWaitProps): JSX.Element {
         props.address,
         undefined,
         undefined,
-        props.mosaic,
+        props.mosaics,
         props.message,
         props.isEncrypt,
       );
@@ -43,7 +43,7 @@ export function PaymentActionWait(props: PaymentActionWaitProps): JSX.Element {
       }
     };
     doAsyncTask();
-  }, [props.address, props.mosaic, props.message, props.isEncrypt]);
+  }, [props.address, props.mosaics, props.message, props.isEncrypt]);
 
   return (
     <YStack f={1} jc="center" ai="center">

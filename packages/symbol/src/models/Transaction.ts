@@ -15,12 +15,12 @@ export default class Transaction {
 
   async build(){};
 
-  public async sign(): Promise<string | undefined> {
+  public async sign(): Promise<string> {
     if(this.payload == '') await this.build();
 
     if(isMobileDevice()) {
-      window.location.href = `alice://sign?type=request_sign_transaction&data=${this.payload}&callback=${utf8ToHex(BACKEND + "/payment/action/announce")}`;
-      return undefined;
+      window.location.href = `alice://sign?type=request_sign_transaction&data=${this.payload}`;
+      return 'aLice';
     } else {
       setTransactionByPayload(this.payload);
       try {
@@ -30,5 +30,6 @@ export default class Transaction {
         console.error(error.message);
       }
     }
+    throw new Error('sign error');
   }
 }

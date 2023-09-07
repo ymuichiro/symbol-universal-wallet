@@ -46,11 +46,11 @@ export default class TransferTransaction extends Transaction{
     this.payload = await TransactionBuilderService.buildTransferTransaction(this);
   }
 
-  public override async sign(): Promise<string | undefined>{
+  public override async sign(): Promise<string>{
     if(this.isEncrypt && isMobileDevice()) {
       if(this.payload == '') await this.build();
-      window.location.href = `alice://sign?type=request_sign_transaction&data=${this.payload}&recipient_publicKey_for_encrypt_message=${this.recipientPublicKey}&callback=${utf8ToHex(BACKEND + "/payment/action/announce")}`;
-      return undefined;
+      window.location.href = `alice://sign?type=request_sign_transaction&data=${this.payload}&recipient_publicKey_for_encrypt_message=${this.recipientPublicKey}`;
+      return 'aLice';
     }
     return await super.sign()
   }
