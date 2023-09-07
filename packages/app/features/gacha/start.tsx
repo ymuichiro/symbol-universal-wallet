@@ -1,4 +1,5 @@
 import {
+  AlertDialog,
   Button,
   H2,
   H3,
@@ -11,27 +12,27 @@ import {
   View,
   XStack,
   YStack,
-  AlertDialog,
 } from '@my/ui';
 import EggAnimation from 'app/assets/jsons/egg-animation.json';
 import Lottie from 'lottie-react-native';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'solito/router';
-import { 
-  AccountService, 
-  MonsterService, 
-  TransactionService, 
-  CommonMonsters, 
-  UncommonMonsters, 
-  RareMonsters, 
-  EpicMonsters, 
+import { getActivePublicKey, isAllowedSSS } from 'sss-module';
+import {
+  AccountService,
+  CommonMonsters,
+  EpicMonsters,
   LegendaryMonsters,
-  MonsterRarity, 
-  isMobileDevice,
-  TransferTransaction, 
-  NetworkType,  
-  Mosaic} from 'symbol';
-import { getActivePublicKey } from 'sss-module';
+  MonsterRarity,
+  MonsterService,
+  Mosaic,
+  NetworkType,
+  RareMonsters,
+  TransactionService,
+  TransferTransaction,
+  UncommonMonsters,
+  isMobileDevice
+} from 'symbol';
 
 interface MosaicSelectProps {
   name: string;
@@ -56,9 +57,14 @@ export function CapselToyStart(): JSX.Element {
   useEffect(() => {
     const doAsyncTask = async () => {
       // モバイルでなければSSSから公開鍵を取得する
+
       if(!isMobileDevice()) {
-        const pubKey = getActivePublicKey();
-        setPublicKey(pubKey);
+        if (isAllowedSSS()){
+          const pubKey = getActivePublicKey();
+          setPublicKey(pubKey);
+        } else {
+          console.log("SSS is not allowed.")
+        }
       }
     };
     // SSSは起動時に初期化されるので、1秒待ってから公開鍵を取得する
