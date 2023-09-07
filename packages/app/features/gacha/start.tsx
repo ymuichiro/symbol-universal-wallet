@@ -245,7 +245,7 @@ function ReportModal(props: ReportModalProps): JSX.Element {
         <View>
           <Label>Token</Label>
           <YStack space={'$3'} f={1}>
-          <select value={mosaicId1} onChange={(e) => setMosaicId1(e.target.value)}>
+          {/* <select value={mosaicId1} onChange={(e) => setMosaicId1(e.target.value)}>
             {props.items.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.name}
@@ -258,9 +258,9 @@ function ReportModal(props: ReportModalProps): JSX.Element {
                 {option.name}
               </option>
             ))}
-          </select>
-            {/* <SelectBase items={props.items} select={{ id: 'xymMon', value: mosaicId1, onValueChange: setMosaicId1 }}/>
-            <SelectBase items={props.items} select={{ id: 'xymMon', value: mosaicId2, onValueChange: setMosaicId2 }} /> */}
+          </select> */}
+            <SelectBase items={props.items} select={{ id: 'xymMon', value: mosaicId1, onValueChange: setMosaicId1 }}/>
+            <SelectBase items={props.items} select={{ id: 'xymMon', value: mosaicId2, onValueChange: setMosaicId2 }} />
           </YStack>
         </View>
         <Button themeInverse onPress={handleSubmit} fontWeight={'bold'} marginTop={'$4'}>
