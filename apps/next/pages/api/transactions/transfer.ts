@@ -14,7 +14,7 @@ export default async function create(req: NextApiRequest, res: NextApiResponse) 
     }
 }
 async function getHandle(req: NextApiRequest, res: NextApiResponse) {
-    let { recipientAddress, 'mosaics[id]': mosaicIds, 'mosaics[amount]': mosaicAmounts, feeMultiplier, message, networkType, deadline } = req.query;
+    let { recipientAddress, 'mosaics[id]': mosaicIds, 'mosaics[amount]': mosaicAmounts, feeMultiplier, message, networkType, deadline, isEncrypt } = req.query;
     const _feeMultiplier = feeMultiplier == undefined ? 100 : Number(feeMultiplier);
     const facade = new symbolSdk.facade.SymbolFacade(networkType == "0" ? "mainnet" : "testnet");
     deadline = deadline == undefined ? new symbolSdk.symbol.NetworkTimestamp(facade.network.fromDatetime(Date.now())).addHours(2).timestamp
@@ -40,8 +40,13 @@ async function getHandle(req: NextApiRequest, res: NextApiResponse) {
     }
     let messageArray: number[] = [];
     if(typeof message === 'string'){
-        messageArray = [0,...(new TextEncoder()).encode(message)];
+        if(isEncrypt == "true") {
+            messageArray = [1,...(new TextEncoder()).encode(message)];
+        } else {
+            messageArray = [0,...(new TextEncoder()).encode(message)];
+        }
     }
+
     const transaction = facade.transactionFactory.create({
         type: 'transfer_transaction_v1',
         deadline,

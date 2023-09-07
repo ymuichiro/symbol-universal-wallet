@@ -20,7 +20,7 @@ export default class MosaicTransaction extends Transaction{
     this.payload = await TransactionBuilderService.buildMosaicTransaction(this);
   }
 
-  public override async sign(): Promise<string | undefined>{
+  public override async sign(): Promise<string>{
     return await super.sign()
   }
 }

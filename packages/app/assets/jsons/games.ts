@@ -1,9 +1,9 @@
-import { GameInfo } from '@my/ui';
+import { GameTabProps } from '@my/ui';
 import LogoIsekaitensei from 'app/assets/icons/logo-isekaitensei.jpg';
 import LogoMosaicCollector from 'app/assets/icons/logo-mosaic-collector.webp';
 import LogoTheTower from 'app/assets/icons/logo-the-tower.png';
 
-export const GAMES_INFO: GameInfo[] = [
+export const GAMES_INFO: GameTabProps['items'] = [
   {
     name: 'The Tower',
     subTitle: "Why climb? Because that's where the tower is.",

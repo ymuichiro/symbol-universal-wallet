@@ -24,7 +24,6 @@ export function buildQueryString(obj: any): string {
 
       if (Array.isArray(value)) {
         if(isStringArray(value)){
-          console.log('isStringArray');
           return value
           .map((item: any) => `${key}=${item}`)
           .join('&');
